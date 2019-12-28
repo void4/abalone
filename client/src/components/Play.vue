@@ -73,6 +73,8 @@ import {Filter} from 'pixi.js'
 import {Matrix} from 'pixi.js'
 import {Texture} from 'pixi.js'
 import {BaseTexture} from 'pixi.js'
+import * as PIXI from 'pixi.js';
+import 'pixi-sound';
 
 import axios from 'axios';
 import NewGame from '@/components/NewGame.vue';
@@ -80,6 +82,11 @@ import Login from '@/components/Login.vue';
 import GameList from '@/components/GameList.vue';
 import Chat from '@/components/Chat.vue';
 import Tutorial from '@/components/Tutorial.vue';
+
+function randomchoice(choices) {
+  var index = Math.floor(Math.random() * choices.length);
+  return choices[index];
+}
 
 export default {
   name: 'Play',
@@ -94,6 +101,7 @@ export default {
       gameinfo: {},
       sprites: [],
       selected: [],
+      ranked: false,
     };
   },
   components: {
@@ -145,6 +153,15 @@ export default {
       this.renderer = renderer
       let container = new Container()
       this.container = container;
+
+      /*
+      console.log(PIXI)
+      this.sounds = [];
+      for (let i=0;i<1;i++) {
+        this.sounds.push(PIXI.sound.Sound.from("move"+i+'.mp3'));
+      }
+      */
+
       let img = new Image()
       img.src = 'field.png';
       let vm = this;
