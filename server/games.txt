@@ -1,0 +1,32 @@
+MvA x3
+MvT x3
+AvD x2
+AvT x2
+AvJ
+JvT
+TvE
+EvT
+RvT x2
+DvT
+TvD x2
+MvA x2
+AvM
+MvA
+MvZ
+MvE
+ZvE
+ZvA
+AvE
+AvZ
+AvE x2
+AvZ
+SvP
+AvS
+SvL
+AvS x2
+MvS
+SvI
+AvM
+MvA x2
+AvM x2
+MvA x2
