@@ -2,6 +2,7 @@
     <div>
         <div class="sidebar">
         <NewGame/>
+        <hr>
         <GameList/>
         </div>
 
@@ -22,9 +23,9 @@
         <div class="userbar">
           <Login/>
           <hr>
-          <Chat/>
-          <hr>
           <Tutorial/>
+          <hr>
+          <Chat/>
         </div>
     </div>
 </template>
@@ -34,10 +35,13 @@
 .sidebar {
   position: absolute;
   top: 0px;
+  left: 0;
   width: 18%;
   align: left;
   background-color: rgba(200,200,200,0.5);
   z-index: 100;
+  overflow-y: scroll;
+  bottom: 0;
 }
 
 .gamebar {
@@ -55,6 +59,7 @@
   align: right;
   background-color: rgba(0,0,250,0.1);
   z-index: 100;
+  bottom: 0;
 }
 
 </style>

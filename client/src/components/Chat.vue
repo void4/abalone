@@ -1,6 +1,6 @@
 <template>
     <div>
-        Chatto
+        <h3>Chatto</h3>
         <br>
         <textarea id="chatarea" type="text" v-model="chat"/>
         <br>
@@ -9,6 +9,12 @@
         {{ info }}
     </div>
 </template>
+
+<style scoped>
+#chatarea {
+  width: 90%;
+}
+</style>
 
 <script>
 import axios from 'axios';

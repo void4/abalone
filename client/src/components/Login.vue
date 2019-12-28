@@ -1,6 +1,6 @@
 <template>
     <div>
-        Login
+        <h3>Login</h3>
 
         <div v-if="!loggedin">
           Username:<input id="username" type="text" v-model="username">
