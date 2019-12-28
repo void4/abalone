@@ -166,7 +166,7 @@ def newgame():
         #g.p2 =
     db.session.add(g)
     db.session.commit()
-    return jsonify({"invitelink":"/play/"+str(g.id)})
+    return jsonify({"invitelink":"/play/"+str(g.id), "gid":g.id})
 
 @app.route("/chat")
 @jwt_required

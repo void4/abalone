@@ -34,6 +34,7 @@ export default {
         .then((res) => {
           this.invitelink = res.data.invitelink;
           this.$root.$emit('loadgames');
+          this.$root.$emit('loadgame', res.data.gid);
         })
         .catch((error) => {
           // eslint-disable-next-line
