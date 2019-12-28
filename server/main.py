@@ -216,9 +216,9 @@ def game():
                         t = g.board[movej[0][-1]].to(dv)
                         if len(movej[0]) == 1:
 
-                            if t.color == g.next_color:
+                            if t and t.color == g.next_color:
                                 t = t.to(dv)
-                                if t.color == g.next_color:
+                                if t and t.color == g.next_color:
                                     t = t.to(dv)
 
                             if t and t.index == movej[1]:
