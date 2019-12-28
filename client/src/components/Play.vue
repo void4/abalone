@@ -232,9 +232,22 @@ export default {
     surrender() {
       alert('WIRKLICH??!');
     },
-  },
-  created() {
+    blinkTab(message) {
+      var oldTitle = document.title,                                                           /* save original title */
+          timeoutId,
+          blink = function() { document.title = document.title == message ? ' ' : message; },  /* function to BLINK browser tab */
+          clear = function() {                                                                 /* function to set title back to original */
+            clearInterval(timeoutId);
+            document.title = oldTitle;
+            window.onmousemove = null;
+            timeoutId = null;
+          };
 
+      if (!timeoutId) {
+        timeoutId = setInterval(blink, 1000);
+        window.onmousemove = clear;                                                            /* stop changing title on moving the mouse */
+      }
+    },
   },
   mounted() {
     this.initGame();
@@ -244,6 +257,7 @@ export default {
       this.gameid = gid;
       this.getGame();
     });
+    this.blinkTab("MOVE ALREADY YOU SLOW F*CK")
   },
 };
 
