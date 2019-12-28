@@ -12,12 +12,7 @@
         <div v-if="loggedin">
           <button id="logout" v-on:click="logout()">Logout</button>
         </div>
-
-        <button id="auth" v-on:click="auth()">AUTHCALL</button>
-
         <p>{{ info }}</p>
-
-        Logged in: {{ loggedin }}
     </div>
 </template>
 

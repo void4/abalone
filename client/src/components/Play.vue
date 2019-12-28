@@ -21,7 +21,9 @@
 
         <div class="userbar">
           <Login/>
+          <hr>
           <Chat/>
+          <hr>
           <Tutorial/>
         </div>
     </div>
@@ -35,6 +37,7 @@
   width: 18%;
   align: left;
   background-color: rgba(200,200,200,0.5);
+  z-index: 100;
 }
 
 .gamebar {
@@ -51,6 +54,7 @@
   width: 18%;
   align: right;
   background-color: rgba(0,0,250,0.1);
+  z-index: 100;
 }
 
 </style>

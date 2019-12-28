@@ -19,7 +19,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 p {
   text-align: left;
   margin: 5%;
