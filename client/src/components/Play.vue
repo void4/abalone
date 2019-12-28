@@ -6,10 +6,11 @@
         </div>
 
         <div class="gamebar">
-          Gameinfo: {{ gameinfo }}
           <br>
           <b>{{ gameinfo.p1 }} vs. {{ gameinfo.p2 }}</b>
           <br>
+          <h5 v-if="ranked">RANKED</h5>
+          <h5 v-else>(unranked)</h5>
           <!--<pre style="text-align: left;">{{ game }}</pre>-->
           <canvas id="cvs"></canvas>
           <!--<button id="move" v-on:click="move()">Move</button>-->
@@ -21,6 +22,7 @@
         <div class="userbar">
           <Login/>
           <Chat/>
+          <Tutorial/>
         </div>
     </div>
 </template>
@@ -68,6 +70,7 @@ import NewGame from '@/components/NewGame.vue';
 import Login from '@/components/Login.vue';
 import GameList from '@/components/GameList.vue';
 import Chat from '@/components/Chat.vue';
+import Tutorial from '@/components/Tutorial.vue';
 
 export default {
   name: 'Play',
@@ -89,6 +92,7 @@ export default {
     Login,
     GameList,
     Chat,
+    Tutorial,
   },
   methods: {
     getGame() {

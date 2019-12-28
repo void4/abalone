@@ -177,6 +177,15 @@ def chat():
         print(user.username, ">", msg)
     return jsonify({"chat":msg+"\n"})
 
+QUOTES = """AAAAAAAA - Arndt
+Hm. - Marten"""
+
+@app.route("/quote")
+def quote():
+    quote = choice(QUOTES.split("\n"))
+    return jsonify({"quote":quote})
+
+
 @app.route("/gamelist")
 @jwt_required
 def gamelist():
