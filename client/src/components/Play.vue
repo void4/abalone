@@ -1,9 +1,5 @@
 <template>
     <div>
-            <p>{{ msg }}</p>
-        Test :)
-        <p>{{ name }}</p>
-
         <div class="sidebar">
         <NewGame/>
         <GameList/>
@@ -13,13 +9,13 @@
           Gameinfo: {{ gameinfo }}
           <br>
           <b>{{ gameinfo.p1 }} vs. {{ gameinfo.p2 }}</b>
-          <pre style="text-align: left;">{{ game }}</pre>
-          <canvas id="cvs">
-          </canvas>
-          <input id="moveinput" type="hidden">
+          <br>
+          <!--<pre style="text-align: left;">{{ game }}</pre>-->
+          <canvas id="cvs"></canvas>
           <!--<button id="move" v-on:click="move()">Move</button>-->
           <p>{{ info }}</p>
           <button id="surrender" v-on:click="surrender()">Surrender</button>
+          <input id="moveinput" type="hidden">
         </div>
 
         <div class="userbar">
@@ -42,8 +38,8 @@
 .gamebar {
   position: absolute;
   align: center;
+  left: 0px;
   width: 100%;
-  margin-left: 18%;
 }
 
 .userbar {
@@ -95,28 +91,6 @@ export default {
     Chat,
   },
   methods: {
-    getMessage() {
-      const path = 'http://localhost:5000/ping';
-      axios.get(path)
-        .then((res) => {
-          this.msg = res.data;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-                    console.error(error);
-        });
-    },
-    getName() {
-      const path = 'http://localhost:5000/name';
-      axios.get(path)
-        .then((res) => {
-          this.name = res.data;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-                    console.error(error);
-        });
-    },
     getGame() {
       const path = 'http://localhost:5000/game';
       axios.get(path, { params: { id: this.gameid } })
@@ -263,8 +237,6 @@ export default {
 
   },
   mounted() {
-    this.getMessage();
-    this.getName();
     this.initGame();
     this.getGame();
     this.$root.$on('loadgame', (gid) => {
