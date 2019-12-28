@@ -16,10 +16,8 @@
           <pre style="text-align: left;">{{ game }}</pre>
           <canvas id="cvs">
           </canvas>
-          <input id="moveinput" type="text">
-
-          <button id="move" v-on:click="move()">Move</button>
-          <p>{{ state }}</p>
+          <input id="moveinput" type="hidden">
+          <!--<button id="move" v-on:click="move()">Move</button>-->
           <p>{{ info }}</p>
           <button id="surrender" v-on:click="surrender()">Surrender</button>
         </div>
@@ -248,6 +246,14 @@ export default {
         }
       }
       this.renderer.render(this.container)
+
+      let nextball = '-'
+      if (this.gameinfo.next == 0) {
+          nextball = '○';
+      } else {
+          nextball = '●';
+      }
+      window.document.title = "Abalone | " + nextball + " 's turn";
     },
     surrender() {
       alert('WIRKLICH??!');
