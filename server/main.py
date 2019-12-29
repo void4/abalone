@@ -299,7 +299,7 @@ def game():
                 db.session.commit()
 
                 now = datetime.now().replace(microsecond=0).time()
-                red.publish('chat', u'[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
+                broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
             moveinfo = str(result)
 
     moveinfo = "Game Over!"
@@ -310,6 +310,9 @@ def game():
     gameinfo = getGameInfo(mg)
     return jsonify({"board":g.sbs(), "state":state, "info":moveinfo, "gameinfo":{"next":g.next_color, **gameinfo}})#jsonify(str(g))
 
+def broadcast(channel, message):
+    red.publish(channel, message.encode('utf-8'))
+
 @app.route("/chat")
 @jwt_required
 def chat():
@@ -318,7 +321,7 @@ def chat():
     if len(msg) > 0:
         print(user.username, ">", msg)
         now = datetime.now().replace(microsecond=0).time()
-        red.publish('chat', u'[%s] %s: %s' % (now.isoformat(), user, msg))
+        broadcast('chat', '[%s] %s: %s' % (now.isoformat(), user, msg))
     return jsonify({"chat":msg+"\n"})
 
 QUOTES = """AAAAAAAA - Arndt
@@ -333,8 +336,12 @@ def event_stream():
     pubsub = red.pubsub()
     pubsub.subscribe('chat')
     for message in pubsub.listen():
+        #print(type(message["data"]))
         #print("STREAM", message)
-        yield 'data: %s\n\n' % message['data']
+        if isinstance(message["data"], bytes):
+            yield 'data: %s\n\n' % message['data'].decode('utf-8')
+        else:
+            yield 'data: %s\n\n' % message["data"]
 
 @app.route('/stream')
 def stream():

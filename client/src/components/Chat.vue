@@ -36,7 +36,7 @@ export default {
       const path = 'http://localhost:5000/chat';
       axios.get(path, { params: { chatinput: this.chatinput } })
         .then((res) => {
-          this.chat += res.data.chat;
+          //this.chat += res.data.chat;
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -45,7 +45,9 @@ export default {
     },
   },
   mounted() {
-  
+    this.$root.$on('chatappend', (msg) => {
+      this.chat += msg + "\n"
+    });
   },
 };
 

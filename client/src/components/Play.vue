@@ -295,6 +295,7 @@ export default {
     let vm = this;
     this.source.onmessage = function (event) {
       console.log("EVT", event.data);
+      vm.$root.$emit('chatappend', event.data);
       vm.getGame();
     };
 
@@ -308,9 +309,6 @@ export default {
     }
 
     this.initGame();
-
-
-
 
     this.getGame();
 
