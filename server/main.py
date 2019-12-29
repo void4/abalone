@@ -168,8 +168,7 @@ def newgame():
             g.p2 = p2.id
             ranked = 1 if request.args.get("ranked", "true") == "true" else 0
             g.ranked = ranked
-            if ranked:
-                g.accepted = 0
+            g.accepted = 0
     elif gamemode == "ai":#like pvp, invite ai player?
         pass#g.p2 = ai.id
     else:
