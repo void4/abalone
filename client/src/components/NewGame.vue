@@ -4,6 +4,8 @@
 
         <button id="newgame" v-on:click="startGame('pvp')">PvP</button>
         Ranked?<input id="ranked" type="checkbox" v-model="ranked"></button>
+        <br>
+        Player name:
         <input id="invitelink" type="text" v-model="invitelink">
         <button id="copylink">Copy link</button>
 
@@ -30,7 +32,7 @@ export default {
   methods: {
     startGame(gamemode) {
       const path = 'http://localhost:5000/newgame';
-      axios.get(path, { params: { gamemode, ranked: this.ranked } })
+      axios.get(path, { params: { gamemode, ranked: this.ranked, invite: this.invitelink } })
         .then((res) => {
           this.invitelink = res.data.invitelink;
           this.$root.$emit('loadgames');

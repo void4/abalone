@@ -15,6 +15,7 @@
           <!--<pre style="text-align: left;">{{ game }}</pre>-->
           <canvas id="cvs"></canvas>
           <!--<button id="move" v-on:click="move()">Move</button>-->
+          <p>{{ turn }}</p>
           <p>{{ info }}</p>
           <button id="surrender" v-on:click="surrender()">Surrender</button>
           <input id="moveinput" type="hidden">
@@ -102,6 +103,7 @@ export default {
       sprites: [],
       selected: [],
       ranked: false,
+      turn: '',
     };
   },
   components: {
@@ -250,14 +252,16 @@ export default {
         }
       }
       this.renderer.render(this.container)
-
+      // firefox tab title has inverted colors...
       let nextball = '-'
       if (this.gameinfo.next == 0) {
-          nextball = '○';
-      } else {
           nextball = '●';
+      } else {
+          nextball = '○';
       }
+      console.log(nextball)
       window.document.title = "Abalone | " + nextball + " 's turn";
+      this.turn = nextball + " 's turn";
     },
     surrender() {
       alert('WIRKLICH??!');
@@ -287,7 +291,7 @@ export default {
       this.gameid = gid;
       this.getGame();
     });
-    this.blinkTab("MOVE ALREADY YOU SLOW F*CK")
+    // this.blinkTab("MOVE ALREADY YOU SLOW F*CK")
   },
 };
 

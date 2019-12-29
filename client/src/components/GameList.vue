@@ -7,7 +7,22 @@
         <p>{{ info }}</p>
         <ul id="example-1">
           <li v-for="game in games">
-            <button @click="loadgame(game.id)">Switch to Game #{{ game.id }}</button>
+            Game #{{ game.gid }}
+            <div v-if="game.opponent">vs {{ game.opponent }}</div>
+            <div v-else>spectating</div>
+            Ranked: {{ game.ranked }}
+            <div v-if="game.invited">
+              <button @click="inviteresponse(game.gid, true)">Accept invitation</button>
+              <button @click="inviteresponse(game.gid, false)">Reject invitation</button>
+            </div>
+            <div v-else>
+              <div v-if="game.accepted">
+                <button @click="loadgame(game.gid)">open</button>
+              </div>
+              <div v-else>
+                Not yet accepted
+              </div>
+            </div>
           </li>
         </ul>
     </div>
@@ -42,7 +57,18 @@ export default {
           this.info = 'Failed to load games. Are you logged in?';
         });
     },
-
+    inviteresponse(gid, accepted) {
+    const path = 'http://localhost:5000/inviteresponse';
+    axios.get(path, {params: {gid, accepted}})
+      .then((res) => {
+        this.loadgames();
+        if (accepted) {
+          this.loadgame(gid)
+        }
+      })
+      .catch(() => {
+      });
+    },
     loadgame(gid) {
       this.$root.$emit('loadgame', gid);
     },
@@ -54,6 +80,7 @@ export default {
     this.$root.$on('loadgames', () => {
       this.loadgames();
     });
+    // setInterval(this.loadgames, 10000);
   },
 };
 
