@@ -284,14 +284,45 @@ export default {
     },
   },
   mounted() {
+
+    this.source = new EventSource('http://localhost:5000/stream');
+    // console.log(this.source)
+
+    this.source.onopen = function(evt) {
+      // console.log("OPEN", evt)
+    }
+
+    let vm = this;
+    this.source.onmessage = function (event) {
+      console.log("EVT", event.data);
+      vm.getGame();
+    };
+
+
+    this.source.onerror = function(event) {
+      console.log(event)
+      if (event.eventPhase == EventSource.CLOSED) {
+          this.source.close();
+          console.log("Event Source Closed");
+      }
+    }
+
     this.initGame();
+
+
+
+
     this.getGame();
+
+    // this.blinkTab("MOVE ALREADY YOU SLOW F*CK")
+
+
     this.$root.$on('loadgame', (gid) => {
       console.log('Load', gid);
       this.gameid = gid;
       this.getGame();
     });
-    // this.blinkTab("MOVE ALREADY YOU SLOW F*CK")
+
   },
 };
 

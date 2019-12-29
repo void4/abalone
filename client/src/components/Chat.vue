@@ -36,7 +36,6 @@ export default {
       const path = 'http://localhost:5000/chat';
       axios.get(path, { params: { chatinput: this.chatinput } })
         .then((res) => {
-          console.log(res.data);
           this.chat += res.data.chat;
         })
         .catch((error) => {
@@ -45,7 +44,8 @@ export default {
         });
     },
   },
-  created() {
+  mounted() {
+  
   },
 };
 

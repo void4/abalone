@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
 from flask_login import LoginManager, UserMixin
 from flask_sqlalchemy import SQLAlchemy
@@ -29,6 +29,10 @@ jwt = JWTManager(app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+from redis import Redis
+
+red = Redis("127.0.0.1")
 
 class User(UserMixin, db.Model):
 
@@ -175,23 +179,6 @@ def newgame():
     db.session.commit()
     return jsonify({"invitelink":"/play/"+str(g.id), "gid":g.id})
 
-@app.route("/chat")
-@jwt_required
-def chat():
-    user = getRequestUser()
-    msg = request.args.get("chatinput", "")
-    if len(msg) > 0:
-        print(user.username, ">", msg)
-    return jsonify({"chat":msg+"\n"})
-
-QUOTES = """AAAAAAAA - Arndt
-Hm. - Marten"""
-
-@app.route("/quote")
-def quote():
-    quote = choice(QUOTES.split("\n"))
-    return jsonify({"quote":quote})
-
 @app.route("/inviteresponse")
 @jwt_required
 def inviteresponse():
@@ -310,6 +297,9 @@ def game():
                         mg.winner = mg.p2
 
                 db.session.commit()
+
+                now = datetime.now().replace(microsecond=0).time()
+                red.publish('chat', u'[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
             moveinfo = str(result)
 
     moveinfo = "Game Over!"
@@ -320,5 +310,36 @@ def game():
     gameinfo = getGameInfo(mg)
     return jsonify({"board":g.sbs(), "state":state, "info":moveinfo, "gameinfo":{"next":g.next_color, **gameinfo}})#jsonify(str(g))
 
+@app.route("/chat")
+@jwt_required
+def chat():
+    user = getRequestUser()
+    msg = request.args.get("chatinput", "")
+    if len(msg) > 0:
+        print(user.username, ">", msg)
+        now = datetime.now().replace(microsecond=0).time()
+        red.publish('chat', u'[%s] %s: %s' % (now.isoformat(), user, msg))
+    return jsonify({"chat":msg+"\n"})
+
+QUOTES = """AAAAAAAA - Arndt
+Hm. - Marten"""
+
+@app.route("/quote")
+def quote():
+    quote = choice(QUOTES.split("\n"))
+    return jsonify({"quote":quote})
+
+def event_stream():
+    pubsub = red.pubsub()
+    pubsub.subscribe('chat')
+    for message in pubsub.listen():
+        #print("STREAM", message)
+        yield 'data: %s\n\n' % message['data']
+
+@app.route('/stream')
+def stream():
+    return Response(event_stream(),
+                          mimetype="text/event-stream")
+
 if __name__ == "__main__":
-    app.run()
+    app.run(threaded=True)
