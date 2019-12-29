@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     register() {
-      const path = 'http://localhost:5000/register';
+      const path = `http://${window.location.hostname}:5000/register`;
       axios.get(path, { params: { username: this.username, password: this.password } })
         .then((res) => {
           this.info = res.data.info;
@@ -52,7 +52,7 @@ export default {
         });
     },
     login() {
-      const path = 'http://localhost:5000/login';
+      const path = `http://${window.location.hostname}:5000/login`;
       axios.get(path, { params: { username: this.username, password: this.password } })
         .then((res) => {
           this.info = res.data.info;
@@ -75,17 +75,6 @@ export default {
       this.loggedin = false;
       // clear game list
       this.$root.$emit('loadgames');
-    },
-    auth() {
-      const path = 'http://localhost:5000/auth';
-      axios.get(path, { params: {} })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-        });
     },
   },
   mounted() {

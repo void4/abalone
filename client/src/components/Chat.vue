@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     chatsubmit() {
-      const path = 'http://localhost:5000/chat';
+      const path =`http://${window.location.hostname}:5000/chat`;
       axios.get(path, { params: { chatinput: this.chatinput } })
         .then((res) => {
           //this.chat += res.data.chat;

@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     getGame() {
-      const path = 'http://localhost:5000/game';
+      const path = `http://${window.location.hostname}:5000/game`;
       axios.get(path, { params: { id: this.gameid } })
         .then((res) => {
           this.game = res.data.board;
@@ -132,7 +132,7 @@ export default {
     move() {
       const movetext = document.getElementById('moveinput').value;
 
-      const path = 'http://localhost:5000/game';
+      const path = `http://${window.location.hostname}:5000/game`;
       axios.get(path, { params: { id: this.gameid, move: movetext } })
         .then((res) => {
           this.game = res.data.board;
@@ -285,7 +285,7 @@ export default {
   },
   mounted() {
 
-    this.source = new EventSource('http://localhost:5000/stream');
+    this.source = new EventSource(`http://${window.location.hostname}:5000/stream`);
     // console.log(this.source)
 
     this.source.onopen = function(evt) {
