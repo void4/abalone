@@ -232,6 +232,7 @@ def getGameInfo(mg):
     return {"gid":gid, "owner":on, "p1":p1n, "p2":p2n, "ranked":ranked, "accepted":accepted, "invited":invited, "opponent":opponent}
 
 @app.route("/game", methods=["GET"])
+@jwt_required
 def game():
     gameid = request.args.get("id", None)
     if gameid is None:
@@ -243,9 +244,11 @@ def game():
     if g is None or mg is None:
         return jsonify({"info":"Game not found"})
 
+    user = getRequestUser()
+    if (g.next_color == 0 and user.id != mg.p1) or (g.next_color == 1 and user.id != mg.p2):
+        moveinfo = "Not your turn!"
 
-
-    if not g.is_over():
+    elif not g.is_over():
         movestr = request.args.get("move", None)
 
         moveinfo = ""
@@ -300,8 +303,8 @@ def game():
                 now = datetime.now().replace(microsecond=0).time()
                 broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
             moveinfo = str(result)
-
-    moveinfo = "Game Over!"
+    else:
+        moveinfo = "Game Over!"
 
 
     state = [[field.xycoords, field.color] for field in g.board]
