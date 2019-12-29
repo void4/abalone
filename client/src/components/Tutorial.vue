@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     getQuote() {
-      const path = 'http://localhost:5000/quote';
+      const path = `http://${window.location.hostname}:5000/quote`;
       axios.get(path)
         .then((res) => {
           this.quote = res.data.quote;

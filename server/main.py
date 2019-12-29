@@ -157,7 +157,7 @@ def newgame():
 
     g = MGame()
     g.owner = user.id
-    g.p1 = user.id
+    g.p1 = user.id#TODO randomize?
     if gamemode == "myself":
         g.p2 = user.id
     elif gamemode == "pvp":
@@ -323,8 +323,12 @@ def chat():
         broadcast('chat', '[%s] %s: %s' % (now.isoformat(), user, msg))
     return jsonify({"chat":msg+"\n"})
 
-QUOTES = """AAAAAAAA - Arndt
-Hm. - Marten"""
+QUOTES = ""
+try:
+    QUOTES = open("quotes.txt").read()
+except Exceptions as e:
+    print(e)
+print(QUOTES)
 
 @app.route("/quote")
 def quote():
