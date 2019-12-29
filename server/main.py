@@ -349,4 +349,4 @@ def stream():
                           mimetype="text/event-stream")
 
 if __name__ == "__main__":
-    app.run(threaded=True)
+    app.run("192.168.2.107", threaded=True)
