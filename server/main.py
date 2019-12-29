@@ -63,6 +63,13 @@ class MGame(db.Model):
     ranked = db.Column(db.Integer, default=0)
     accepted = db.Column(db.Integer, default=1)
 
+    def addMove(self, movestr):
+        if self.moves is None:
+            self.moves = ""
+        self.moves += "%s\n" % movestr
+
+        self.lastmove = datetime.utcnow()
+
     def __repr__(self):
         return "<Game {}>".format(self.id)
 
@@ -142,7 +149,7 @@ def getGame(gid):
     if isinstance(premoves, str):
     	for line in premoves.split("\n"):
     		line = line.strip()
-    		if len(line) == 0:
+    		if len(line) == 0 and line not in "leave surrender".split():
     			continue
     		#print(line)
     		g.move(*g.move_from_str(line))
@@ -253,56 +260,65 @@ def game():
 
         moveinfo = ""
         if movestr:
-            if movestr.startswith("["):
-                movej = json.loads(movestr)
-                if len(movej[0]) > 0:
-                    selected = ",".join([g.board[index].name for index in movej[0]])
-                    # always from first or last ball? from center?
-                    movedir = "?"
-                    for d,dv in DIRECTIONS.items():
-                        t = g.board[movej[0][-1]].to(dv)
-                        if len(movej[0]) == 1:
 
-                            if t and t.color == g.next_color:
-                                t = t.to(dv)
+            opponent = mg.p1 if mg.p2 == user.id else mg.p2
+
+            if movestr == "leave":
+                if mg.ranked == 0:
+                    mg.addMove(movestr)
+                    mg.winner = opponent
+                    moveinfo = "Player left"
+            elif movestr == "surrender":
+                mg.addMove(movestr)
+                mg.winner = opponent
+                moveinfo = "Player surrendered"
+            else:
+                if movestr.startswith("["):
+                    movej = json.loads(movestr)
+                    if len(movej[0]) > 0:
+                        selected = ",".join([g.board[index].name for index in movej[0]])
+                        # always from first or last ball? from center?
+                        movedir = "?"
+                        for d,dv in DIRECTIONS.items():
+                            t = g.board[movej[0][-1]].to(dv)
+                            if len(movej[0]) == 1:
+
                                 if t and t.color == g.next_color:
                                     t = t.to(dv)
+                                    if t and t.color == g.next_color:
+                                        t = t.to(dv)
 
-                            if t and t.index == movej[1]:
+                                if t and t.index == movej[1]:
+                                    movedir = d.split()[-1]
+                                    break
+
+                            # sideways moves
+                            if len(movej[0]) > 1 and t and t.index == movej[1]:
                                 movedir = d.split()[-1]
                                 break
+                        movestr = selected + " " + movedir
+                # Can't move if game is over
+                move = g.move_from_str(movestr)
+                result = g.move(*move)
+                moveinfo = str(result)
+                if result[0]:
 
-                        # sideways moves
-                        if len(movej[0]) > 1 and t and t.index == movej[1]:
-                            movedir = d.split()[-1]
-                            break
-                    movestr = selected + " " + movedir
-            # Can't move if game is over
-            move = g.move_from_str(movestr)
-            result = g.move(*move)
-            if result[0]:
+                    mg.addMove(movestr)
+                    # does this update?
 
-                if mg.moves is None:
-                    mg.moves = ""
-                mg.moves += "%s\n" % movestr
-
-                mg.lastmove = datetime.utcnow()
-                # does this update?
-
-                if g.is_over():
-                    outs = list(g.out.items())
-                    if outs[0][1] == 6:
-                        # Player 0 won
-                        mg.winner = mg.p1
-                    else:
-                        # Player 1 won
-                        mg.winner = mg.p2
-
-                db.session.commit()
+                    if g.is_over():
+                        outs = list(g.out.items())
+                        if outs[0][1] == 6:
+                            # Player 0 won
+                            mg.winner = mg.p1
+                        else:
+                            # Player 1 won
+                            mg.winner = mg.p2
 
                 now = datetime.now().replace(microsecond=0).time()
                 broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
-            moveinfo = str(result)
+
+            db.session.commit()
     else:
         moveinfo = "Game Over!"
 

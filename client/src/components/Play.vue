@@ -148,6 +148,14 @@ export default {
                     console.error(error);
         });
     },
+    leave() {
+      document.getElementById('moveinput').value = "leave";
+      this.move();
+    },
+    surrender() {
+      document.getElementById('moveinput').value = "surrender";
+      this.move();
+    },
     initGame() {
       let cvs = document.getElementById('cvs')
       cvs.width = 512
@@ -263,9 +271,6 @@ export default {
       console.log(nextball)
       window.document.title = "Abalone | " + nextball + " 's turn";
       this.turn = nextball + " 's turn";
-    },
-    surrender() {
-      alert('WIRKLICH??!');
     },
     blinkTab(message) {
       var oldTitle = document.title,                                                           /* save original title */
