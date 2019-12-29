@@ -57,6 +57,7 @@ class MGame(db.Model):
     winner = db.Column(db.Integer, db.ForeignKey("user.id"))
     lastmove = db.Column(db.DateTime, default=datetime.utcnow)
     ranked = db.Column(db.Integer, default=0)
+    accepted = db.Column(db.Integer, default=1)
 
     def __repr__(self):
         return "<Game {}>".format(self.id)
@@ -96,7 +97,7 @@ def route_login():
 
 def getRequestUser():
     username = get_jwt_identity()
-    print("Authenticated user", username)
+    #print("Authenticated user", username)
     user = User.query.filter_by(username=username).first()
     return user
 
@@ -149,16 +150,22 @@ def getGame(gid):
 def newgame():
     user = getRequestUser()
     gamemode = request.args.get("gamemode", "pvp")
+
     g = MGame()
     g.owner = user.id
     g.p1 = user.id
     if gamemode == "myself":
         g.p2 = user.id
     elif gamemode == "pvp":
-        #requi
-        ranked = 1 if request.args.get("ranked", "true") == "true" else 0
-        g.ranked = ranked
-        pass
+        invite = request.args.get("invite", None)
+        p2 = User.query.filter_by(username=invite).first()
+        # TODO can't invite yourself
+        if p2:
+            g.p2 = p2.id
+            ranked = 1 if request.args.get("ranked", "true") == "true" else 0
+            g.ranked = ranked
+            if ranked:
+                g.accepted = 0
     elif gamemode == "ai":#like pvp, invite ai player?
         pass#g.p2 = ai.id
     else:
@@ -185,16 +192,58 @@ def quote():
     quote = choice(QUOTES.split("\n"))
     return jsonify({"quote":quote})
 
+@app.route("/inviteresponse")
+@jwt_required
+def inviteresponse():
+    gid = request.args.get("gid")
+    mg = MGame.query.get(int(gid))
+    gameinfo = getGameInfo(mg)
+    if gameinfo["invited"]:
+        accepted = request.args.get("accepted") == "true"
+        if accepted:
+            mg.accepted = True
+            db.session.add(mg)
+        else:
+            db.session.delete(mg)
+
+        db.session.commit()
+    return jsonify({})
+
 
 @app.route("/gamelist")
 @jwt_required
 def gamelist():
     user = getRequestUser()
-    games = [{"id":g.id} for g in MGame.query.filter_by(owner=user.id)]
+    games = [getGameInfo(mg) for mg in MGame.query.filter(((MGame.p1 == user.id) | (MGame.p2 == user.id)) & MGame.winner.is_(None))]
     return jsonify({
         "info": "loaded",
         "games": games
     })
+
+def getGameInfo(mg):
+    gid = mg.id
+    owner = User.query.get(mg.owner) if mg.owner else None
+    p1 = User.query.get(mg.p1) if mg.p1 else None
+    p2 = User.query.get(mg.p2) if mg.p2 else None
+    on = owner.username if owner else "Unknown"
+    p1n = p1.username if p1 else "Unknown"
+    p2n = p2.username if p2 else "unknown"
+    ranked = False if mg.ranked == 0 else True
+    accepted = False if mg.accepted == 0 else True
+    user = getRequestUser()
+    if user:
+        participating = (p1.id == user.id or p2.id == user.id)
+        invited = owner.id != user.id and participating and not accepted
+        if p1.id == user.id:
+            opponent = p2n
+        elif p2.id == user.id:
+            opponent = p1n
+        else:
+            opponent = None
+    else:
+        invited = False
+        opponent = on
+    return {"gid":gid, "owner":on, "p1":p1n, "p2":p2n, "ranked":ranked, "accepted":accepted, "invited":invited, "opponent":opponent}
 
 @app.route("/game", methods=["GET"])
 def game():
@@ -264,16 +313,12 @@ def game():
             moveinfo = str(result)
 
     moveinfo = "Game Over!"
-    p1 = User.query.get(mg.p1) if mg.p1 else None
-    p2 = User.query.get(mg.p2) if mg.p2 else None
-    p1n = p1.username if p1 else "Unknown"
-    p2n = p2.username if p2 else "unknown"
-    print("ranked", mg.ranked)
-    ranked = False if mg.ranked == 0 else True
+
 
     state = [[field.xycoords, field.color] for field in g.board]
 
-    return jsonify({"board":g.sbs(), "state":state, "info":moveinfo, "gameinfo":{"p1":p1n, "p2":p2n, "ranked":ranked, "next":g.next_color}})#jsonify(str(g))
+    gameinfo = getGameInfo(mg)
+    return jsonify({"board":g.sbs(), "state":state, "info":moveinfo, "gameinfo":{"next":g.next_color, **gameinfo}})#jsonify(str(g))
 
 if __name__ == "__main__":
     app.run()
