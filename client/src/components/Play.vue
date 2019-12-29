@@ -10,7 +10,7 @@
           <br>
           <b>{{ gameinfo.p1 }} vs. {{ gameinfo.p2 }}</b>
           <br>
-          <h5 v-if="ranked">RANKED</h5>
+          <h5 v-if="gameinfo.ranked">RANKED</h5>
           <h5 v-else>(unranked)</h5>
           <!--<pre style="text-align: left;">{{ game }}</pre>-->
           <canvas id="cvs"></canvas>
@@ -18,6 +18,7 @@
           <p>{{ turn }}</p>
           <p>{{ info }}</p>
           <button id="surrender" v-on:click="surrender()">Surrender</button>
+          <button v-if="!gameinfo.ranked" id="leave" v-on:click="leave()">Leave</button>
           <input id="moveinput" type="hidden">
         </div>
 
