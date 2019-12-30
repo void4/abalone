@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <div>
       <b-nav tabs align="center">
       <b-nav-item to="/">Play</b-nav-item>
