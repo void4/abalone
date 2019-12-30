@@ -4,6 +4,7 @@
         <NewGame/>
         <hr>
         <GameList/>
+        <PlayerList/>
         </div>
 
         <div class="gamebar">
@@ -84,6 +85,7 @@ import Login from '@/components/Login.vue';
 import GameList from '@/components/GameList.vue';
 import Chat from '@/components/Chat.vue';
 import Tutorial from '@/components/Tutorial.vue';
+import PlayerList from '@/components/PlayerList.vue';
 
 function randomchoice(choices) {
   var index = Math.floor(Math.random() * choices.length);
@@ -113,6 +115,7 @@ export default {
     GameList,
     Chat,
     Tutorial,
+    PlayerList,
   },
   methods: {
     getGame() {

@@ -2,22 +2,16 @@
     <div>
         New Game
 
-        <button id="newgame" v-on:click="startGame('pvp')">PvP</button>
-        Ranked?<input id="ranked" type="checkbox" v-model="ranked"></button>
+        <b-button id="newgame" v-on:click="startGame('pvp')">PvP</b-button>
+
+        <b-form-checkbox id="ranked" type="checkbox" v-model="ranked">Ranked?</b-form-checkbox>
         <br>
         Player name:
-        <input id="invitelink" type="text" v-model="invitelink">
-        <button id="copylink">Copy link</button>
+        <b-form-input id="invitelink" type="text" v-model="invitelink" placeholder="Enter player name"></b-form-input>
+        <b-button id="copylink">Copy link</b-button>
 
-        <button id="newgame2" @click="startGame('ai')">against AI</button>
-        <button id="newgame3" @click="startGame('myself')">against myself</button>
-        <br>
-        Player list:
-        <ul id="example-1">
-          <li v-for="player in players">
-            {{ player }}
-          </li>
-        </ul>
+        <b-button id="newgame2" @click="startGame('ai')">against AI</b-button>
+        <b-button id="newgame3" @click="startGame('myself')">against myself</b-button>
     </div>
 </template>
 
@@ -32,7 +26,6 @@ export default {
       info: 'Your move',
       ranked: true,
       invitelink: '',
-      players: [],
     };
   },
   components: {
@@ -51,20 +44,8 @@ export default {
                     console.error(error);
         });
     },
-    getPlayers() {
-      const path = `http://${window.location.hostname}:5000/players`;
-      axios.get(path)
-        .then((res) => {
-          this.players = res.data.players;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-                    console.error(error);
-        });
-    },
   },
   mounted() {
-    this.getPlayers();
   },
 };
 

@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Play</router-link> |
-      <router-link v-if="showstats" to="/stats">Stats</router-link> |
-      <router-link to="/about">About</router-link>
+
+    <div>
+      <b-nav tabs align="center">
+      <b-nav-item to="/">Play</b-nav-item>
+      <b-nav-item v-if="showstats" to="/stats">Stats</b-nav-item>
+      <b-nav-item to="/about">About</b-nav-item>
+      </b-nav>
     </div>
     <router-view/>
   </div>
@@ -29,6 +32,16 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+
+
+*, ::after, ::before {
+    box-sizing: border-box;
+    outline: none !important;
+    border: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
 }
 </style>
 

@@ -3,16 +3,16 @@
         <h3>Login</h3>
 
         <div v-if="!loggedin">
-          <form action="javascript:void(0);">
-            Username:<input id="username" type="text" v-model="username">
-            Password:<input id="password" type="password" v-model="password">
-            <button id="login" v-on:click="login()">Login</button>
+          <b-form action="javascript:void(0);">
+            Username:<b-form-input id="username" type="text" v-model="username"></b-form-input>
+            Password:<b-form-input id="password" type="password" v-model="password"></b-form-input>
+            <b-button id="login" v-on:click="login()">Login</b-button>
             <!--<button id="register" v-on:click="register()">Register</button>-->
-          </form>
+          </b-form>
         </div>
 
         <div v-if="loggedin">
-          <button id="logout" v-on:click="logout()">Logout</button>
+          <b-button id="logout" v-on:click="logout()">Logout</b-button>
         </div>
         <p>{{ info }}</p>
     </div>

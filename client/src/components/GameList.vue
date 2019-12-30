@@ -5,26 +5,26 @@
         <button id="reload" v-on:click="loadgames()">Reload</button>
 
         <p>{{ info }}</p>
-        <ul id="example-1">
-          <li v-for="game in games">
+        <b-list-group>
+          <b-list-group-item v-for="game in games">
             Game #{{ game.gid }}
             <div v-if="game.opponent">vs {{ game.opponent }}</div>
             <div v-else>spectating</div>
             Ranked: {{ game.ranked }}
-            <div v-if="game.invited">
+            <template v-if="game.invited">
               <button @click="inviteresponse(game.gid, true)">Accept invitation</button>
               <button @click="inviteresponse(game.gid, false)">Reject invitation</button>
-            </div>
-            <div v-else>
-              <div v-if="game.accepted">
+            </template>
+            <template v-else>
+              <template v-if="game.accepted">
                 <button @click="loadgame(game.gid)">open</button>
-              </div>
-              <div v-else>
+              </template>
+              <template v-else>
                 Not yet accepted
-              </div>
-            </div>
-          </li>
-        </ul>
+              </template>
+            </template>
+          </b-list-group-item>
+        </b-list-group>
     </div>
 </template>
 
