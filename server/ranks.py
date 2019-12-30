@@ -21,6 +21,7 @@ def win_probability(player_rating, opponent_rating):
     return cdf(delta_mu / denom)
 
 def generatePlot(path):
+    plt.figure(figsize=(20,10))
     #TODO optimize mgames = MGame.query.having(winner=True)
     mgames = [mg for mg in MGame.query.all() if mg.winner != None and mg.ranked != 0]
     print(mgames)
