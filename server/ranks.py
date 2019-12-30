@@ -6,6 +6,8 @@ from trueskill import Rating, rate_1vs1, quality_1vs1
 from trueskill import BETA
 from trueskill.backends import cdf
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from models import MGame, User
