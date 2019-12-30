@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     startGame(gamemode) {
-      const path = `http://${window.location.hostname}:5000/newgame`;
+      const path = `${window.location.protocol}//${window.location.hostname}:5000/newgame`;
       axios.get(path, { params: { gamemode, ranked: this.ranked, invite: this.invitelink } })
         .then((res) => {
           this.invitelink = res.data.invitelink;

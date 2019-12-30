@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     getPlayers() {
-      const path = `http://${window.location.hostname}:5000/players`;
+      const path = `${window.location.protocol}//${window.location.hostname}:5000/players`;
       axios.get(path)
         .then((res) => {
           this.players = res.data.players;

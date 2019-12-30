@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     loadgames() {
-      const path = `http://${window.location.hostname}:5000/gamelist`;
+      const path = `${window.location.protocol}//${window.location.hostname}:5000/gamelist`;
       axios.get(path)
         .then((res) => {
           console.log(res.data);
@@ -58,7 +58,7 @@ export default {
         });
     },
     inviteresponse(gid, accepted) {
-    const path = `http://${window.location.hostname}:5000/inviteresponse`;
+    const path = `${window.location.protocol}//${window.location.hostname}:5000/inviteresponse`;
     axios.get(path, {params: {gid, accepted}})
       .then((res) => {
         this.loadgames();
