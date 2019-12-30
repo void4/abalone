@@ -111,7 +111,7 @@ def getGame(gid):
     if isinstance(premoves, str):
     	for line in premoves.split("\n"):
     		line = line.strip()
-    		if len(line) == 0 and line not in "leave surrender".split():
+    		if len(line) == 0 or line in "leave surrender".split():
     			break
     		#print(line)
     		g.move(*g.move_from_str(line))
