@@ -1,4 +1,9 @@
-from main import User, MGame, db
+from models import User, MGame
+from main import db
+
+from cleardb import reset
+
+reset()
 
 lines = [l.strip() for l in open("games.txt").readlines()]
 

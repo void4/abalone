@@ -312,10 +312,12 @@ def game():
                             mg.winner = mg.p2
 
                     now = datetime.now().replace(microsecond=0).time()
-                    broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), aimovestr))#TODO user
+                    broadcast('chat', '[%s] AI MOVE %s' % (now.isoformat(), aimovestr))#TODO user
 
-    else:
+    if g.is_over():
         moveinfo = "Game Over!"
+        # if ranked
+        generatePlot("../client/src/assets/graph.png")
 
     # TODO db.session.add(mg)?!
     db.session.commit()

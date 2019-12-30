@@ -97,6 +97,7 @@ def generatePlot(path):
 
     plt.legend()
     plt.savefig(path)
+    plt.close()
     #plt.show()
 
 if __name__ == "__main__":
