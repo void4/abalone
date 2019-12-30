@@ -246,7 +246,10 @@ def game():
     if movestr == "leave":
         if mg.ranked == 0:
             mg.addMove(movestr)
-            mg.winner = opponent
+            if opponent is None:
+                mg.winner = AIUSER.id#TODO OFFLINEUSER?
+            else:
+                mg.winner = opponent
             moveinfo = "Player left"
 
     elif movestr == "surrender":
@@ -314,7 +317,7 @@ def game():
                     now = datetime.now().replace(microsecond=0).time()
                     broadcast('chat', '[%s] AI MOVE %s' % (now.isoformat(), aimovestr))#TODO user
 
-    if g.is_over():
+    if g.is_over() or mg.winner is not None:
         moveinfo = "Game Over!"
         # if ranked
         generatePlot("../client/src/assets/graph.png")
