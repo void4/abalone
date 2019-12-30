@@ -1,9 +1,5 @@
 <template>
-    <div>
-        Statistics
-        {{ msg }}
-        <img alt="Vue logo" src="../assets/graph.png">
-    </div>
+      <img alt="Vue logo" src="../assets/graph.png">
 </template>
 
 <script>
@@ -20,20 +16,8 @@ export default {
   components: {
   },
   methods: {
-    getMessage() {
-      const path = `http://${window.location.hostname}:5000/ping`;
-      axios.get(path)
-        .then((res) => {
-          this.msg = res.data;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-                    console.error(error);
-        });
-    },
   },
   created() {
-    this.getMessage();
   },
 };
 </script>

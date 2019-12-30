@@ -7,7 +7,7 @@
             Username:<input id="username" type="text" v-model="username">
             Password:<input id="password" type="password" v-model="password">
             <button id="login" v-on:click="login()">Login</button>
-            <button id="register" v-on:click="register()">Register</button>
+            <!--<button id="register" v-on:click="register()">Register</button>-->
           </form>
         </div>
 
@@ -72,6 +72,7 @@ export default {
             this.token = res.data.token;
             cookie.set('access_token', this.token);
             this.$root.$emit('loadgames');
+            this.$root.$emit('showstats');
           }
         })
         .catch((error) => {

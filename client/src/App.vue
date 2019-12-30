@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Play</router-link> |
-      <router-link to="/stats">Stats</router-link> |
+      <router-link v-if="showstats" to="/stats">Stats</router-link> |
       <router-link to="/about">About</router-link>
     </div>
     <router-view/>
@@ -31,3 +31,21 @@
   color: #42b983;
 }
 </style>
+
+<script>
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      showstats: false,
+    };
+  },
+  mounted() {
+    this.$root.$on('showstats', () => {
+      this.showstats = true;
+    });
+  },
+};
+
+</script>
