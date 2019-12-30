@@ -128,7 +128,7 @@ def name():
     return jsonify(choice("ABALONE SCHABLONE ABALTWO".split()))
 #, "send_wildcard":True}}, expose_headers=["Access-Control-Allow-Origin"], send_wildcard=True)
 
-from pyabalone.solver import Game, DIRECTIONS
+from pyabalone.solver import Game, DIRECTIONS, INDEXNAMES
 from collections import defaultdict
 
 #defaultdict with timeout?
@@ -150,11 +150,16 @@ def getGame(gid):
     	for line in premoves.split("\n"):
     		line = line.strip()
     		if len(line) == 0 and line not in "leave surrender".split():
-    			continue
+    			break
     		#print(line)
     		g.move(*g.move_from_str(line))
     return g
 
+AIUSER = User.query.filter_by(username="AI").first()
+if not AIUSER:
+    AIUSER = User(username="AI")
+db.session.add(AIUSER)
+db.session.commit()
 
 @app.route("/newgame", methods=["GET"])
 @jwt_required#shouldn't be REQUIRED, otherwise unregistered users can't use
@@ -177,7 +182,7 @@ def newgame():
             g.ranked = ranked
             g.accepted = 0
     elif gamemode == "ai":#like pvp, invite ai player?
-        pass#g.p2 = ai.id
+        g.p2 = AIUSER.id
     else:
         raise Exception("Unknown gamemode", gamemode)
         #g.p2 =
@@ -238,6 +243,32 @@ def getGameInfo(mg):
         opponent = on
     return {"gid":gid, "owner":on, "p1":p1n, "p2":p2n, "ranked":ranked, "accepted":accepted, "invited":invited, "opponent":opponent}
 
+def getMovestr(g, movestr):
+    movej = json.loads(movestr)
+    if len(movej[0]) > 0:
+        selected = ",".join([g.board[index].name for index in movej[0]])
+        # always from first or last ball? from center?
+        movedir = "?"
+        for d,dv in DIRECTIONS.items():
+            t = g.board[movej[0][-1]].to(dv)
+            if len(movej[0]) == 1:
+
+                if t and t.color == g.next_color:
+                    t = t.to(dv)
+                    if t and t.color == g.next_color:
+                        t = t.to(dv)
+
+                if t and t.index == movej[1]:
+                    movedir = d.split()[-1]
+                    break
+
+            # sideways moves
+            if len(movej[0]) > 1 and t and t.index == movej[1]:
+                movedir = d.split()[-1]
+                break
+        movestr = selected + " " + movedir
+    return movestr
+
 @app.route("/game", methods=["GET"])
 @jwt_required
 def game():
@@ -252,59 +283,66 @@ def game():
         return jsonify({"info":"Game not found"})
 
     user = getRequestUser()
-    if (g.next_color == 0 and user.id != mg.p1) or (g.next_color == 1 and user.id != mg.p2):
+    movestr = request.args.get("move", None)
+    opponent = mg.p1 if mg.p2 == user.id else mg.p2
+    if movestr == "leave":
+        if mg.ranked == 0:
+            mg.addMove(movestr)
+            mg.winner = opponent
+            moveinfo = "Player left"
+
+    elif movestr == "surrender":
+        mg.addMove(movestr)
+        mg.winner = opponent
+        moveinfo = "Player surrendered"
+
+    elif (g.next_color == 0 and user.id != mg.p1) or (g.next_color == 1 and user.id != mg.p2):
         moveinfo = "Not your turn!"
 
     elif not g.is_over():
-        movestr = request.args.get("move", None)
 
         moveinfo = ""
         if movestr:
+            if movestr.startswith("["):
+                movestr = getMovestr(g, movestr)
+            # Can't move if game is over
+            move = g.move_from_str(movestr)
+            if move is None:
+                raise Exception("invalid move")
+            result = g.move(*move)
+            moveinfo = str(result)
 
-            opponent = mg.p1 if mg.p2 == user.id else mg.p2
-
-            if movestr == "leave":
-                if mg.ranked == 0:
-                    mg.addMove(movestr)
-                    mg.winner = opponent
-                    moveinfo = "Player left"
-            elif movestr == "surrender":
+            if result[0]:
                 mg.addMove(movestr)
-                mg.winner = opponent
-                moveinfo = "Player surrendered"
-            else:
-                if movestr.startswith("["):
-                    movej = json.loads(movestr)
-                    if len(movej[0]) > 0:
-                        selected = ",".join([g.board[index].name for index in movej[0]])
-                        # always from first or last ball? from center?
-                        movedir = "?"
-                        for d,dv in DIRECTIONS.items():
-                            t = g.board[movej[0][-1]].to(dv)
-                            if len(movej[0]) == 1:
+                # does this update?
+                if g.is_over():
+                    outs = list(g.out.items())
+                    if outs[0][1] == 6:
+                        # Player 0 won
+                        mg.winner = mg.p1
+                    else:
+                        # Player 1 won
+                        mg.winner = mg.p2
 
-                                if t and t.color == g.next_color:
-                                    t = t.to(dv)
-                                    if t and t.color == g.next_color:
-                                        t = t.to(dv)
+                now = datetime.now().replace(microsecond=0).time()
+                broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
 
-                                if t and t.index == movej[1]:
-                                    movedir = d.split()[-1]
-                                    break
-
-                            # sideways moves
-                            if len(movej[0]) > 1 and t and t.index == movej[1]:
-                                movedir = d.split()[-1]
-                                break
-                        movestr = selected + " " + movedir
-                # Can't move if game is over
-                move = g.move_from_str(movestr)
-                result = g.move(*move)
-                moveinfo = str(result)
-                if result[0]:
-
-                    mg.addMove(movestr)
-                    # does this update?
+            if not g.is_over():#check for winner?
+                if mg.p2 == AIUSER.id:
+                    aimove, result = g.aimove()
+                    print(aimove, result)
+                    if not result[0]:
+                        moveinfo = "AI can't move!"
+                        raise Exception(moveinfo)
+                        # TODO assign winner?
+                    aimovedir = list(DIRECTIONS.keys())[aimove[1]].split()[-1]
+                    if isinstance(aimove[0], list):
+                        aimovefields = ",".join([INDEXNAMES[f.index] for f in aimove[0]])
+                    else:
+                        aimovefields = INDEXNAMES[aimove[0].index]
+                    aimovestr = aimovefields + " " + aimovedir
+                    print(aimovestr)
+                    mg.addMove(aimovestr)
 
                     if g.is_over():
                         outs = list(g.out.items())
@@ -315,14 +353,14 @@ def game():
                             # Player 1 won
                             mg.winner = mg.p2
 
-                now = datetime.now().replace(microsecond=0).time()
-                broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
+                    now = datetime.now().replace(microsecond=0).time()
+                    broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), aimovestr))#TODO user
 
-            db.session.commit()
     else:
         moveinfo = "Game Over!"
 
-
+    # TODO db.session.add(mg)?!
+    db.session.commit()
     state = [[field.xycoords, field.color] for field in g.board]
 
     gameinfo = getGameInfo(mg)
@@ -347,7 +385,7 @@ try:
     QUOTES = open("quotes.txt").read()
 except Exceptions as e:
     print(e)
-print(QUOTES)
+#print(QUOTES)
 
 @app.route("/quote")
 def quote():
