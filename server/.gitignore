@@ -1,5 +1,6 @@
 # Database migrations
 migrations/
+app.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
