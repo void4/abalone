@@ -277,10 +277,10 @@ def game():
                     outs = list(g.out.items())
                     if outs[0][1] == 6:
                         # Player 0 won
-                        mg.winner = mg.p1
+                        mg.winner = mg.p2
                     else:
                         # Player 1 won
-                        mg.winner = mg.p2
+                        mg.winner = mg.p1
 
                 now = datetime.now().replace(microsecond=0).time()
                 broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
