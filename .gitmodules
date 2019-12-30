@@ -1,0 +1,3 @@
+[submodule "server/pyabalone"]
+	path = server/pyabalone
+	url = https://github.com/void4/pyabalone
