@@ -1,2 +1,9 @@
 Flask
 Flask-Cors
+flask_login
+flask_migrate
+flask_jwt
+flask_jwt_extended
+redis
+trueskill
+matplotlib
