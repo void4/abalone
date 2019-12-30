@@ -1,7 +1,9 @@
+const fs = require('fs');
+
 module.exports = {
     devServer: {
         disableHostCheck: true,
-        https: true
+        https: true,
         host: '0.0.0.0',
         port: 443,       // ssl defult port number
         inline: true,
