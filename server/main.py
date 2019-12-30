@@ -380,10 +380,4 @@ def stream():
                           mimetype="text/event-stream")
 
 if __name__ == "__main__":
-
-    from OpenSSL import SSL
-    context = SSL.Context(SSL.PROTOCOL_TLSv1_2)
-    context.use_privatekey_file('/etc/letsencrypt/live/qewasd.com/privkey.pem')
-    context.use_certificate_file('/etc/letsencrypt/live/qewasd.com/cert.pem')
-
-    app.run("0.0.0.0", threaded=True, ssl_context=context)
+    app.run("0.0.0.0", threaded=True, ssl_context=("/etc/letsencrypt/live/qewasd.com/cert.pem", "/etc/letsencrypt/live/qewasd.com/privkey.pem"))
