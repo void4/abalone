@@ -88,6 +88,11 @@ def getRequestUser():
 def ping_pong():
     return jsonify(str(randint(0,9)))
 
+@app.route("/players")
+def route_players():
+    return jsonify({"players": [user.username for user in User.query.all()]})
+@jwt_required
+
 @app.route("/name", methods=["GET"])
 def name():
     return jsonify(choice("ABALONE SCHABLONE ABALTWO".split()))

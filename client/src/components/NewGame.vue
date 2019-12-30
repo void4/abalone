@@ -11,6 +11,13 @@
 
         <button id="newgame2" @click="startGame('ai')">against AI</button>
         <button id="newgame3" @click="startGame('myself')">against myself</button>
+        <br>
+        Player list:
+        <ul id="example-1">
+          <li v-for="player in players">
+            {{ player }}
+          </li>
+        </ul>
     </div>
 </template>
 
@@ -25,6 +32,7 @@ export default {
       info: 'Your move',
       ranked: true,
       invitelink: '',
+      players: [],
     };
   },
   components: {
@@ -43,8 +51,20 @@ export default {
                     console.error(error);
         });
     },
+    getPlayers() {
+      const path = `http://${window.location.hostname}:5000/players`;
+      axios.get(path)
+        .then((res) => {
+          this.players = res.data.players;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+                    console.error(error);
+        });
+    },
   },
-  created() {
+  mounted() {
+    this.getPlayers();
   },
 };
 
