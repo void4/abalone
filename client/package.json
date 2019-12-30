@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "cookie-machine": "^0.1.1",
     "core-js": "^3.4.3",
+    "pixi-sound": "^3.0.4",
     "pixi.js": "^5.2.0",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3",
