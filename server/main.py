@@ -30,12 +30,15 @@ db.app = app
 db.init_app(app)
 migrate = Migrate(app, db)
 
-AIUSER = User.query.filter_by(username="AI").first()
-if not AIUSER:
-    AIUSER = User(username="AI")
-    print("Added AI user")
-db.session.add(AIUSER)
-db.session.commit()
+try:
+    AIUSER = User.query.filter_by(username="AI").first()
+    if not AIUSER:
+        AIUSER = User(username="AI")
+        print("Added AI user")
+    db.session.add(AIUSER)
+    db.session.commit()
+except Exception as e:
+    print(e)
 
 login = LoginManager(app)
 
