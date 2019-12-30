@@ -1,14 +1,11 @@
 from flask import Flask, jsonify, request, Response
 from flask_cors import CORS
-from flask_login import LoginManager, UserMixin
-from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
-
-from werkzeug.security import generate_password_hash, check_password_hash
 
 from datetime import datetime
 from random import randint, choice
@@ -27,53 +24,25 @@ app.config.from_object(Config)
 app.config['JWT_SECRET_KEY'] = "C6SBm83gDenAZJbx4fUX9"
 jwt = JWTManager(app)
 
-db = SQLAlchemy(app)
+
+from models import db, MGame, User
+db.app = app
+db.init_app(app)
 migrate = Migrate(app, db)
+
+AIUSER = User.query.filter_by(username="AI").first()
+if not AIUSER:
+    AIUSER = User(username="AI")
+    print("Added AI user")
+db.session.add(AIUSER)
+db.session.commit()
+
+login = LoginManager(app)
 
 from redis import Redis
 
 red = Redis("127.0.0.1")
 
-class User(UserMixin, db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)#TODO case insensitive
-    email = db.Column(db.String(120), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    def __repr__(self):
-        return "<User {}>".format(self.username)
-
-class MGame(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    #created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    owner = db.Column(db.Integer, db.ForeignKey("user.id"))
-    p1 = db.Column(db.Integer, db.ForeignKey("user.id"))
-    p2 = db.Column(db.Integer, db.ForeignKey("user.id"))
-    moves = db.Column(db.Text)
-    winner = db.Column(db.Integer, db.ForeignKey("user.id"))
-    lastmove = db.Column(db.DateTime, default=datetime.utcnow)
-    ranked = db.Column(db.Integer, default=0)
-    accepted = db.Column(db.Integer, default=1)
-
-    def addMove(self, movestr):
-        if self.moves is None:
-            self.moves = ""
-        self.moves += "%s\n" % movestr
-
-        self.lastmove = datetime.utcnow()
-
-    def __repr__(self):
-        return "<Game {}>".format(self.id)
-
-login = LoginManager(app)
 
 @login.user_loader
 def load_user(id):
@@ -112,13 +81,6 @@ def getRequestUser():
     user = User.query.filter_by(username=username).first()
     return user
 
-@app.route("/auth")
-@jwt_required
-def route_auth():
-    print(request.args)
-    print(getRequestUser())
-    return jsonify({})
-
 @app.route("/ping", methods=["GET"])
 def ping_pong():
     return jsonify(str(randint(0,9)))
@@ -154,12 +116,6 @@ def getGame(gid):
     		#print(line)
     		g.move(*g.move_from_str(line))
     return g
-
-AIUSER = User.query.filter_by(username="AI").first()
-if not AIUSER:
-    AIUSER = User(username="AI")
-db.session.add(AIUSER)
-db.session.commit()
 
 @app.route("/newgame", methods=["GET"])
 @jwt_required#shouldn't be REQUIRED, otherwise unregistered users can't use
@@ -268,6 +224,8 @@ def getMovestr(g, movestr):
                 break
         movestr = selected + " " + movedir
     return movestr
+
+from ranks import generatePlot
 
 @app.route("/game", methods=["GET"])
 @jwt_required
