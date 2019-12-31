@@ -163,7 +163,7 @@ export default {
       let cvs = document.getElementById('cvs')
       cvs.width = 512
       cvs.height = 512
-      let renderer = new Renderer({width: cvs.width, height: cvs.height, backgroundColor : 0xffff00, view: cvs, antialias: true} )
+      let renderer = new Renderer({width: cvs.width, height: cvs.height, backgroundColor : 0x999999, view: cvs, antialias: true} )
       this.renderer = renderer
       let container = new Container()
       this.container = container;
