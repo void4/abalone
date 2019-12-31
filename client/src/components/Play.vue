@@ -276,9 +276,9 @@ export default {
       // firefox tab title has inverted colors...
       let nextball = '-'
       if (this.gameinfo.next == 0) {
-          nextball = '●';
-      } else {
           nextball = '○';
+      } else {
+          nextball = '●';
       }
       console.log(nextball)
       window.document.title = "Abalone | " + nextball + " 's turn";
