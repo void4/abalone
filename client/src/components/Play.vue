@@ -176,6 +176,14 @@ export default {
       }
       */
 
+      this.tex_board = Texture.from("board.svg")
+      let sprite = new Sprite(this.tex_board)
+      sprite.x = 0;
+      sprite.y = 0;
+      sprite.width = 512;
+      sprite.height = 512;
+      container.addChild(sprite)
+
       let img = new Image()
       img.src = 'field.png';
       let vm = this;
@@ -216,8 +224,8 @@ export default {
         // eslint-disable-next-line
         let i = 0;
         // eslint-disable-next-line
-        let sw = (cvs.width/10);
-        let sh = (cvs.height/10)
+        let sw = (cvs.width/11);
+        let sh = (cvs.height/11)
         vm.tex_empty = new Texture(new BaseTexture(img));
         for (var y=0;y<ROWS.length;y++) {
           for (var x=0;x<ROWS[y];x++) {
@@ -226,10 +234,10 @@ export default {
             sprite.interactive = true;
             sprite.on('mousedown', onDown);
             sprite.on('touchstart', onDown);
-            sprite.x = sw*x+(9-ROWS[y])*0.5*sw + sw/2;
-            sprite.y = sh*y + sh/2;
-            sprite.width = sw;
-            sprite.height = sh;
+            sprite.x = sw*x+(9-ROWS[y])*0.5*sw + sw;
+            sprite.y = (sh*0.9)*y + sh*1.4;
+            sprite.width = sw*0.9;
+            sprite.height = sh*0.9;
             vm.sprites.push(sprite)
             container.addChild(sprite)
             i += 1;
@@ -245,6 +253,7 @@ export default {
         vm.tex_one = Texture.from("field1.png")
         vm.tex_zero_s = Texture.from("field0s.png")
         vm.tex_one_s = Texture.from("field1s.png")
+
 
         renderer.render(container)
       }
