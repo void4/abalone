@@ -125,7 +125,7 @@ def getGame(gid):
 				line = [line]
 			if len(line[0]) == 0 or line in "leave surrender".split():
 				break
-			print(line)
+			#print(line)
 			g.move(*g.move_from_str(line[0]))
 	return g
 
