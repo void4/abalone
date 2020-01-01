@@ -2,6 +2,24 @@
     <div>
         New Game
 
+          <b-form-radio-group
+            id="btn-radios-1"
+            v-model="layout"
+            :options="options"
+            buttons
+            name="radios-btn-default"
+          ></b-form-radio-group>
+        </b-form-group>
+
+        <b-form-radio-group
+          id="btn-radios-1"
+          v-model="timetomove"
+          :options="timeoptions"
+          buttons
+          name="radios-btn-default"
+        ></b-form-radio-group>
+      </b-form-group>
+
         <b-button id="newgame" v-on:click="startGame('pvp')">PvP</b-button>
 
         <b-form-checkbox id="ranked" type="checkbox" v-model="ranked">Ranked?</b-form-checkbox>
@@ -26,6 +44,18 @@ export default {
       info: 'Your move',
       ranked: true,
       invitelink: '',
+      layout: null,
+      options: [
+        { text: 'Standard', value: null },
+        { text: 'German Daisy', value: '-----00--11000-111-00--11-----------11--00-111-00011--00-----' },
+        { text: 'Belgian Daisy', value: '00-11000111-00-11---------------------------11-00-11100011-00' }
+      ],
+      timetomove: null,
+      timeoptions: [
+        { text: 'Unlimited', value: null },
+        { text: '5 Minutes', value: 5*60 },
+        { text: '15 Minutes', value: 15*60 },
+      ]
     };
   },
   components: {
@@ -33,7 +63,7 @@ export default {
   methods: {
     startGame(gamemode) {
       const path = `${window.location.protocol}//${window.location.hostname}:5000/newgame`;
-      axios.get(path, { params: { gamemode, ranked: this.ranked, invite: this.invitelink } })
+      axios.get(path, { params: { gamemode, ranked: this.ranked, invite: this.invitelink, timetomove: this.timetomove, layout: this.layout } })
         .then((res) => {
           this.invitelink = res.data.invitelink;
           this.$root.$emit('loadgames');

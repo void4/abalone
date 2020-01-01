@@ -13,6 +13,8 @@
           <br>
           <h5 v-if="gameinfo.ranked">RANKED</h5>
           <h5 v-else>(unranked)</h5>
+          <h5>P1: {{ gameinfo.p1time }} | {{ gameinfo.timetomove }} | P2: {{ gameinfo.p2time }}</h5>
+          <h5>{{ gameinfo.layout }}</h5>
           <!--<pre style="text-align: left;">{{ game }}</pre>-->
           <canvas id="cvs"></canvas>
           <!--<button id="move" v-on:click="move()">Move</button>-->
@@ -107,6 +109,7 @@ export default {
       selected: [],
       ranked: false,
       turn: '',
+      timeref: null,
     };
   },
   components: {
@@ -118,6 +121,19 @@ export default {
     PlayerList,
   },
   methods: {
+    startTimer() {
+      console.log("STARTING TIMER")
+      this.timeref = setInterval(this.timer, 1000)
+      console.log(this.timer)
+    },
+    timer() {
+      console.log("Timer")
+      if (this.gameinfo.next == 0) {
+        this.gameinfo.p1time -= 1;
+      } else {
+        this.gameinfo.p2time -= 1;
+      }
+    },
     getGame() {
       const path = `${window.location.protocol}//${window.location.hostname}:5000/game`;
       axios.get(path, { params: { id: this.gameid } })
@@ -125,8 +141,12 @@ export default {
           this.game = res.data.board;
           this.state = res.data.state;
           this.info = res.data.info;
+          console.log("GAMEINFO", this.gameinfo)
           this.gameinfo = res.data.gameinfo;
           this.drawGame();
+          if (this.timeref == null && this.gameinfo.timetomove && this.gameinfo.p1time < this.gameinfo.timetomove) {
+            this.startTimer();
+          }
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -145,6 +165,9 @@ export default {
           this.gameinfo = res.data.gameinfo;
           this.selected = [];
           this.drawGame();
+          if (this.timeref == null && this.gameinfo.timetomove && this.gameinfo.p1time < this.gameinfo.timetomove) {
+            this.startTimer();
+          }
         })
         .catch((error) => {
           // eslint-disable-next-line

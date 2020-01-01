@@ -33,13 +33,19 @@ class MGame(db.Model):
     lastmove = db.Column(db.DateTime, default=datetime.utcnow)
     ranked = db.Column(db.Integer, default=0)
     accepted = db.Column(db.Integer, default=1)
+    timetomove = db.Column(db.Integer, default=None)
+    layout = db.Column(db.Text, default=None)
+    p1time = db.Column(db.Integer, default=None)
+    p2time = db.Column(db.Integer, default=None)
 
     def addMove(self, movestr):
+        self.lastmove = datetime.utcnow()
+
         if self.moves is None:
             self.moves = ""
-        self.moves += "%s\n" % movestr
 
-        self.lastmove = datetime.utcnow()
+        self.moves += "%s %s\n" % (movestr, str(self.lastmove.timestamp()))
+
 
     def __repr__(self):
         return "<Game {}>".format(self.id)
