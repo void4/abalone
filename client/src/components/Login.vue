@@ -7,7 +7,7 @@
             Username:<b-form-input id="username" type="text" v-model="username"></b-form-input>
             Password:<b-form-input id="password" type="password" v-model="password"></b-form-input>
             <b-button id="login" v-on:click="login()">Login</b-button>
-            <!--<button id="register" v-on:click="register()">Register</button>-->
+            <button id="register" v-on:click="register()">Register</button>
           </b-form>
         </div>
 
