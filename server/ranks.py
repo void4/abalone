@@ -22,7 +22,11 @@ def win_probability(player_rating, opponent_rating):
     denom = sqrt(2 * (BETA * BETA) + pow(player_rating.sigma, 2) + pow(opponent_rating.sigma, 2))
     return cdf(delta_mu / denom)
 
-DEFAULTPATH = "/dist/img/graph.png"#"../client/src/assets/graph.png"
+import os
+if os.getcwd().startswith("/root"):
+    DEFAULTPATH = "/dist/img/graph.png"
+else:
+    DEFAULTPATH = "../client/src/assets/graph.png"
 
 def generatePlot(path=DEFAULTPATH):
     plt.figure(figsize=(20,10))

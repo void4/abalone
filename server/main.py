@@ -117,27 +117,28 @@ def getGame(gid):
 
 	if mg.state is None:
 		layout = mg.layout
+		g = Game(layout)
+
+		premoves = mg.moves
+		if isinstance(premoves, str):
+			for line in premoves.split("\n"):
+				line = line.strip()
+				if line.count(" ") > 1:
+					line = line.rsplit(" ", 1)
+				else:
+					line = [line]
+				if len(line[0]) == 0 or line in "leave surrender".split():
+					break
+				#print(line)
+				g.move(*g.move_from_str(line[0]))
+
 	else:
 		layout = mg.state
+		g = Game(layout)
+		#print("LAYOUT", layout)
 
-	#print("LAYOUT", layout)
-	g = Game(layout)
 
 	# probabilistic check?
-	"""
-	premoves = mg.moves
-	if isinstance(premoves, str):
-		for line in premoves.split("\n"):
-			line = line.strip()
-			if line.count(" ") > 1:
-				line = line.rsplit(" ", 1)
-			else:
-				line = [line]
-			if len(line[0]) == 0 or line in "leave surrender".split():
-				break
-			#print(line)
-			g.move(*g.move_from_str(line[0]))
-	"""
 
 	return g
 
@@ -434,5 +435,9 @@ def stream():
 	return Response(event_stream(),
 						  mimetype="text/event-stream")
 
+import os
 if __name__ == "__main__":
-	app.run("0.0.0.0", threaded=True, ssl_context=("/etc/letsencrypt/live/qewasd.com/cert.pem", "/etc/letsencrypt/live/qewasd.com/privkey.pem"))
+	if os.getcwd().startswith("/root"):
+		app.run("0.0.0.0", threaded=True, ssl_context=("/etc/letsencrypt/live/qewasd.com/cert.pem", "/etc/letsencrypt/live/qewasd.com/privkey.pem"))
+	else:
+		app.run("0.0.0.0", threaded=True)
