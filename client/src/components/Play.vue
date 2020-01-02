@@ -54,6 +54,11 @@
   align: center;
   left: 0px;
   width: 100%;
+  background-color: #edebe9;
+}
+
+html {
+  background-color: #edebe9;
 }
 
 .userbar {
@@ -186,7 +191,7 @@ export default {
       let cvs = document.getElementById('cvs')
       cvs.width = 512
       cvs.height = 512
-      let renderer = new Renderer({width: cvs.width, height: cvs.height, backgroundColor : 0x999999, view: cvs, antialias: true} )
+      let renderer = new Renderer({width: cvs.width, height: cvs.height, backgroundColor : 0xedebe9, view: cvs, antialias: true} )
       this.renderer = renderer
       let container = new Container()
       this.container = container;
