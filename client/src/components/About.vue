@@ -1,7 +1,9 @@
 <template>
     <div>
-        About
-        <img alt="Vue logo" src="../assets/face.png">
+        <h3>About</h3>
+        Please send feedback to
+        <img alt="Vue logo" src="mx.png">
+        :)
     </div>
 </template>
 
