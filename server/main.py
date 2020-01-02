@@ -114,8 +114,18 @@ def getGame(gid):
 	mg = MGame.query.get(gid)
 	if mg is None:
 		return None
+
+	if mg.state is None:
+		layout = mg.layout
+	else:
+		layout = mg.state
+
+	#print("LAYOUT", layout)
+	g = Game(layout)
+
+	# probabilistic check?
+	"""
 	premoves = mg.moves
-	g = Game(mg.layout)
 	if isinstance(premoves, str):
 		for line in premoves.split("\n"):
 			line = line.strip()
@@ -127,6 +137,8 @@ def getGame(gid):
 				break
 			#print(line)
 			g.move(*g.move_from_str(line[0]))
+	"""
+
 	return g
 
 @app.route("/newgame", methods=["GET"])
@@ -301,6 +313,8 @@ def game():
 
 			if result[0]:
 
+				mg.state = g.getLayout()
+
 				now = datetime.utcnow()
 				if mg.moves is None:
 					mg.lastmove = now
@@ -352,6 +366,7 @@ def game():
 					aimovestr = aimovefields + " " + aimovedir
 					print(aimovestr)
 					mg.addMove(aimovestr)
+					mg.state = g.getLayout()
 
 					if g.is_over():
 						outs = list(g.out.items())

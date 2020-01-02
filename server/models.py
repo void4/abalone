@@ -37,6 +37,7 @@ class MGame(db.Model):
     layout = db.Column(db.Text, default=None)
     p1time = db.Column(db.Integer, default=None)
     p2time = db.Column(db.Integer, default=None)
+    state = db.Column(db.Text)
 
     def addMove(self, movestr):
         self.lastmove = datetime.utcnow()
