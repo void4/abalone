@@ -58,7 +58,7 @@ export default {
   name: 'App',
   data() {
     return {
-      showstats: false,
+      showstats: true,
     };
   },
   mounted() {
