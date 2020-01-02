@@ -383,7 +383,7 @@ def game():
 	if g.is_over() or mg.winner is not None:
 		moveinfo = "Game Over!"
 		# if ranked
-		generatePlot("../client/src/assets/graph.png")
+		generatePlot()
 
 	# TODO db.session.add(mg)?!
 	db.session.commit()

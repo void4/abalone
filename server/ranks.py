@@ -22,7 +22,9 @@ def win_probability(player_rating, opponent_rating):
     denom = sqrt(2 * (BETA * BETA) + pow(player_rating.sigma, 2) + pow(opponent_rating.sigma, 2))
     return cdf(delta_mu / denom)
 
-def generatePlot(path):
+DEFAULTPATH = "/dist/img/graph.png"#"../client/src/assets/graph.png"
+
+def generatePlot(path=DEFAULTPATH):
     plt.figure(figsize=(20,10))
     #TODO optimize mgames = MGame.query.having(winner=True)
     mgames = [mg for mg in MGame.query.all() if mg.winner != None and mg.ranked != 0]
@@ -105,4 +107,4 @@ def generatePlot(path):
 
 if __name__ == "__main__":
     from main import db
-    generatePlot("../client/src/assets/graph.png")
+    generatePlot(DEFAULTPATH)
