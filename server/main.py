@@ -375,7 +375,7 @@ def game():
 	state = [[field.xycoords, field.color] for field in g.board]
 
 	gameinfo = getGameInfo(mg)
-	return jsonify({"board":g.sbs(), "state":state, "info":moveinfo, "gameinfo":{"next":g.next_color, **gameinfo}})#jsonify(str(g))
+	return jsonify({"board":g.sbs(), "state":state, "info":moveinfo, "gameinfo":{"next":g.next_color, "out":list(g.out.values()), **gameinfo}})#jsonify(str(g))
 
 def broadcast(channel, message):
 	red.publish(channel, message.encode('utf-8'))

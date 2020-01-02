@@ -9,12 +9,14 @@
 
         <div class="gamebar">
           <br>
-          <b>{{ gameinfo.p1 }} vs. {{ gameinfo.p2 }}</b>
-          <br>
-          <h5 v-if="gameinfo.ranked">RANKED</h5>
-          <h5 v-else>(unranked)</h5>
-          <h5>P1: {{ gameinfo.p1time }} | {{ gameinfo.timetomove }} | P2: {{ gameinfo.p2time }}</h5>
-          <h5>{{ gameinfo.layout }}</h5>
+          <template v-if="gameinfo">
+            <b>{{ gameinfo.p1 }} vs. {{ gameinfo.p2 }}</b>
+            <br>
+            <h5 v-if="gameinfo.ranked">RANKED</h5>
+            <h5 v-else>(unranked)</h5>
+            <h5>P1: {{ gameinfo.p1time }} | {{ gameinfo.timetomove }} | P2: {{ gameinfo.p2time }}</h5>
+            <h5 v-if="gameinfo.out">{{ '○'.repeat(gameinfo.out[0]) }} | {{ '●'.repeat(gameinfo.out[1]) }}</h5>
+          </template>
           <!--<pre style="text-align: left;">{{ game }}</pre>-->
           <canvas id="cvs"></canvas>
           <!--<button id="move" v-on:click="move()">Move</button>-->
