@@ -263,7 +263,6 @@ def getMovestr(g, movestr):
 		movestr = selected + " " + movedir
 	return movestr
 
-from ranks import generatePlot
 from time import time
 
 @app.route("/game", methods=["GET"])
@@ -383,8 +382,6 @@ def game():
 
 	if g.is_over() or mg.winner is not None:
 		moveinfo = "Game Over!"
-		# if ranked
-		generatePlot()
 
 	# TODO db.session.add(mg)?!
 	db.session.commit()
@@ -418,6 +415,12 @@ except Exceptions as e:
 def quote():
 	quote = choice(QUOTES.split("\n"))
 	return jsonify({"quote":quote})
+
+from stats import getStats
+
+@app.route("/ratings")
+def route_ratings():
+	return jsonify(getStats())
 
 def event_stream():
 	pubsub = red.pubsub()
