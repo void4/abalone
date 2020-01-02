@@ -22,13 +22,15 @@
           <!--<button id="move" v-on:click="move()">Move</button>-->
           <p>{{ turn }}</p>
           <p>{{ info }}</p>
-          <button id="surrender" v-on:click="surrender()">Surrender</button>
-          <button v-if="!gameinfo.ranked" id="leave" v-on:click="leave()">Leave</button>
+          <button id="surrender" v-on:click="surrender()">{{ $t('surrender') }}</button>
+          <button v-if="!gameinfo.ranked" id="leave" v-on:click="leave()">{{ $t('leave') }}</button>
           <input id="moveinput" type="hidden">
         </div>
 
         <div class="userbar">
           <Login/>
+          <hr>
+          <Language/>
           <hr>
           <Tutorial/>
           <hr>
@@ -99,6 +101,7 @@ import GameList from '@/components/GameList.vue';
 import Chat from '@/components/Chat.vue';
 import Tutorial from '@/components/Tutorial.vue';
 import PlayerList from '@/components/PlayerList.vue';
+import Language from '@/components/Language.vue';
 
 function randomchoice(choices) {
   var index = Math.floor(Math.random() * choices.length);
@@ -130,6 +133,7 @@ export default {
     Chat,
     Tutorial,
     PlayerList,
+    Language,
   },
   methods: {
     startTimer() {

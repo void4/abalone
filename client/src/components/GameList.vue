@@ -54,7 +54,7 @@ export default {
         })
         .catch(() => {
           this.games = [];
-          this.info = 'Failed to load games. Are you logged in?';
+          this.info = this.$t('failedloadinggames');
         });
     },
     inviteresponse(gid, accepted) {

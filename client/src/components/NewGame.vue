@@ -1,6 +1,6 @@
 <template>
     <div>
-        New Game
+        {{ $t('newgame') }}
 
           <b-form-radio-group
             id="btn-radios-1"
@@ -20,16 +20,16 @@
         ></b-form-radio-group>
       </b-form-group>
 
-        <b-button id="newgame" v-on:click="startGame('pvp')">PvP</b-button>
+        <b-button id="newgame" v-on:click="startGame('pvp')">{{ $t('pvp') }}</b-button>
 
-        <b-form-checkbox id="ranked" type="checkbox" v-model="ranked">Ranked?</b-form-checkbox>
+        <b-form-checkbox id="ranked" type="checkbox" v-model="ranked">{{ $t('ranked') }}</b-form-checkbox>
         <br>
-        Player name:
-        <b-form-input id="invitelink" type="text" v-model="invitelink" placeholder="Enter player name"></b-form-input>
-        <b-button id="copylink">Copy link</b-button>
+        {{ $t('playername') }}
+        <b-form-input id="invitelink" type="text" v-model="invitelink" :placeholder="$t('enterplayername')"></b-form-input>
+        <b-button id="copylink">{{ $t('copylink') }}</b-button>
 
-        <b-button id="newgame2" @click="startGame('ai')">against AI</b-button>
-        <b-button id="newgame3" @click="startGame('myself')">against myself</b-button>
+        <b-button id="newgame2" @click="startGame('ai')">{{ $t('againstai') }}</b-button>
+        <b-button id="newgame3" @click="startGame('myself')">{{ $t('againstmyself') }}</b-button>
     </div>
 </template>
 
@@ -52,9 +52,9 @@ export default {
       ],
       timetomove: null,
       timeoptions: [
-        { text: 'Unlimited', value: null },
-        { text: '5 Minutes', value: 5*60 },
-        { text: '15 Minutes', value: 15*60 },
+        { text: this.$t('unlimited'), value: null },
+        { text: this.$t('min5'), value: 5*60 },
+        { text: this.$t('min15'), value: 15*60 },
       ]
     };
   },

@@ -3,9 +3,9 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <div>
       <b-nav tabs align="center">
-      <b-nav-item to="/">Play</b-nav-item>
-      <b-nav-item v-if="showstats" to="/stats">Stats</b-nav-item>
-      <b-nav-item to="/about">About</b-nav-item>
+      <b-nav-item to="/">{{ $t('play') }}</b-nav-item>
+      <b-nav-item v-if="showstats" to="/stats">{{ $t('stats') }}</b-nav-item>
+      <b-nav-item to="/about">{{ $t('about') }}</b-nav-item>
       </b-nav>
     </div>
     <router-view/>
