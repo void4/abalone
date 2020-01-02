@@ -4,15 +4,15 @@
 
         <div v-if="!loggedin">
           <b-form action="javascript:void(0);">
-            Username:<b-form-input id="username" type="text" v-model="username"></b-form-input>
-            Password:<b-form-input id="password" type="password" v-model="password"></b-form-input>
-            <b-button id="login" v-on:click="login()">Login</b-button>
-            <button id="register" v-on:click="register()">Register</button>
+            {{ $t('username') }}<b-form-input id="username" type="text" v-model="username"></b-form-input>
+            {{ $t('password') }}<b-form-input id="password" type="password" v-model="password"></b-form-input>
+            <b-button id="login" v-on:click="login()">{{ $t('login') }}</b-button>
+            <button id="register" v-on:click="register()">{{ $t('register') }}</button>
           </b-form>
         </div>
 
         <div v-if="loggedin">
-          <b-button id="logout" v-on:click="logout()">Logout</b-button>
+          <b-button id="logout" v-on:click="logout()">{{ $t('logout') }}</b-button>
         </div>
         <p>{{ info }}</p>
     </div>

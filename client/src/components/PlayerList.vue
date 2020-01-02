@@ -1,6 +1,6 @@
 <template>
   <div class="playerlist">
-  {{ $t('playerlist') }}
+  <h3>{{ $t('playerlist') }}</h3>
   <b-list-group>
     <b-list-group-item v-for="player in players">
       {{ player }}

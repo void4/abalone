@@ -24,7 +24,6 @@
 
         <b-form-checkbox id="ranked" type="checkbox" v-model="ranked">{{ $t('ranked') }}</b-form-checkbox>
         <br>
-        {{ $t('playername') }}
         <b-form-input id="invitelink" type="text" v-model="invitelink" :placeholder="$t('enterplayername')"></b-form-input>
         <b-button id="copylink">{{ $t('copylink') }}</b-button>
 

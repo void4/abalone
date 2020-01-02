@@ -10,10 +10,10 @@
         <div class="gamebar">
           <br>
           <template v-if="gameinfo">
-            <b>{{ gameinfo.p1 }} vs. {{ gameinfo.p2 }}</b>
+            <b>{{ gameinfo.p1 }} {{ $t('vs') }} {{ gameinfo.p2 }}</b>
             <br>
-            <h5 v-if="gameinfo.ranked">RANKED</h5>
-            <h5 v-else>(unranked)</h5>
+            <h5 v-if="gameinfo.ranked">{{ $t('ranked') }}</h5>
+            <h5 v-else>({{ $t('unranked') }})</h5>
             <h5 v-if="gameinfo.p1time || gameinfo.p2time" v-bind:class="{ p1timeover: !gameinfo.p1time || !gameinfo.p2time }">P1: {{ gameinfo.p1time }} | {{ gameinfo.timetomove }} | P2: {{ gameinfo.p2time }}</h5>
             <h5 v-if="gameinfo.out">{{ '●'.repeat(gameinfo.out[0]) }} | {{ '○'.repeat(gameinfo.out[1]) }}</h5>
           </template>
@@ -327,8 +327,8 @@ export default {
           nextball = '●';
       }
       console.log(nextball)
-      window.document.title = "Abalone | " + nextball + " 's turn";
-      this.turn = nextball + " 's turn";
+      window.document.title = "Abalone | " + nextball + " 's " + this.$t('turn');
+      this.turn = nextball + " 's " + this.$t('turn');
     },
     blinkTab(message) {
       var oldTitle = document.title,                                                           /* save original title */

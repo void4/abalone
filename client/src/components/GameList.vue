@@ -1,8 +1,8 @@
 <template>
     <div class="gamelist">
-        Game List
+        <h3>{{ $t('gamelist') }}</h3>
 
-        <button id="reload" v-on:click="loadgames()">Reload</button>
+        <button id="reload" v-on:click="loadgames()">{{ $t('reload') }}</button>
 
         <p>{{ info }}</p>
         <b-list-group>
@@ -12,12 +12,12 @@
             <div v-else>spectating</div>
             Ranked: {{ game.ranked }}
             <template v-if="game.invited">
-              <button @click="inviteresponse(game.gid, true)">Accept invitation</button>
-              <button @click="inviteresponse(game.gid, false)">Reject invitation</button>
+              <button @click="inviteresponse(game.gid, true)">{{ $t('acceptinvite') }}</button>
+              <button @click="inviteresponse(game.gid, false)">{{ $t('rejectinvite') }}</button>
             </template>
             <template v-else>
               <template v-if="game.accepted">
-                <button @click="loadgame(game.gid)">open</button>
+                <button @click="loadgame(game.gid)">{{ $t('open') }}</button>
               </template>
               <template v-else>
                 Not yet accepted
