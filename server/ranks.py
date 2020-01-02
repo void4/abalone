@@ -104,4 +104,4 @@ def generatePlot(path):
     #plt.show()
 
 if __name__ == "__main__":
-    generatePlot("latestranks.png")
+    generatePlot("../client/src/assets/graph.png")
