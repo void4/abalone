@@ -2,6 +2,19 @@ from models import User, MGame
 from copy import deepcopy
 from trueskill import Rating, rate_1vs1
 from collections import defaultdict, Counter
+import hashlib
+
+
+def colorFromName(name):
+    #cache this somewhere...
+    #maybe compute this clientside?
+    hash_object = hashlib.sha256(name.encode("utf-8"))
+    hex_dig = hash_object.hexdigest()
+    r = int(hex_dig[-2:], 16)
+    g = int(hex_dig[-4:-2], 16)
+    b = int(hex_dig[-6:-4], 16)
+    a = 1.0
+    return f"rgba({r},{g},{b},{a})"
 
 def getStats():
     mgames = [mg for mg in MGame.query.all() if mg.winner != None and mg.ranked != 0]
@@ -56,7 +69,8 @@ def getStats():
         line = {
           "label": p+" %.2f+-%.2f %i" % (mu, sigma, numgames),
           "fill": False,
-          "data": Y
+          "data": Y,
+          "borderColor": colorFromName(p),
         }
 
         datasets.append(line)
