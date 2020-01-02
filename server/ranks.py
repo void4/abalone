@@ -104,4 +104,5 @@ def generatePlot(path):
     #plt.show()
 
 if __name__ == "__main__":
+    from main import db
     generatePlot("../client/src/assets/graph.png")
