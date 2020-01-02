@@ -1,5 +1,6 @@
 <template>
     <div>
+      <h3>Tutorial</h3>
       <b-form-radio-group
         id="btn-radios-1"
         v-model="language"
@@ -8,7 +9,6 @@
         name="radios-btn-default"
       ></b-form-radio-group>
       <template v-if="language == 'en'">
-        <h3>Tutorial</h3>
         <p>
         1,2 or 3 marbles can be moved.
         <br><br>
