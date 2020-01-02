@@ -46,6 +46,8 @@ var i18n = new VueI18n({
       leave: 'Leave',
       failedloadinggames: 'Failed to load games. Are you logged in?',
       newgame: 'New Game',
+      chat: 'Chatto',
+      submit: 'Submit',
 
     },
     de: {
@@ -79,6 +81,8 @@ var i18n = new VueI18n({
       leave: 'Verlassen',
       failedloadinggames: 'Spieleliste konnte nicht geladen werden. Bist Du eingeloggt?',
       newgame: 'Neues Spiel',
+      chat: 'Tschät',
+      submit: 'Absenden',
     }
   }
 })

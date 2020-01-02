@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{ $t('newgame') }}
+        <h3>{{ $t('newgame') }}</h3>
 
           <b-form-radio-group
             id="btn-radios-1"

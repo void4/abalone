@@ -1,11 +1,11 @@
 <template>
     <div>
-        <h3>Chatto</h3>
+        <h3>{{ $t('chat') }}</h3>
         <br>
         <textarea id="chatarea" type="text" v-model="chat"/>
         <br>
         <input id="chatinput" type="text" v-model="chatinput">
-        <button id="chatsubmit" @click="chatsubmit()">Submit</button>
+        <button id="chatsubmit" @click="chatsubmit()">{{ $t('submit') }}</button>
         {{ info }}
     </div>
 </template>
