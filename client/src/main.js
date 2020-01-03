@@ -8,6 +8,13 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import VueI18n from 'vue-i18n'
 
+
+import Vuex from 'vuex'
+Vue.use(Vuex)
+
+import storePlugin from './storePlugin'
+Vue.use(storePlugin)
+
 Vue.use(BootstrapVue)
 Vue.use(VueI18n)
 

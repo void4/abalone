@@ -30,7 +30,7 @@
         <div class="userbar">
           <Login/>
           <hr>
-          <Language/>
+          <Settings/>
           <hr>
           <Tutorial/>
           <hr>
@@ -103,7 +103,7 @@ import GameList from '@/components/GameList.vue';
 import Chat from '@/components/Chat.vue';
 import Tutorial from '@/components/Tutorial.vue';
 import PlayerList from '@/components/PlayerList.vue';
-import Language from '@/components/Language.vue';
+import Settings from '@/components/Settings.vue';
 
 function randomchoice(choices) {
   var index = Math.floor(Math.random() * choices.length);
@@ -135,7 +135,7 @@ export default {
     Chat,
     Tutorial,
     PlayerList,
-    Language,
+    Settings,
   },
   methods: {
     startTimer() {
@@ -327,7 +327,10 @@ export default {
       }
 
       if (changes > 0) {
-        this.sounds[0].play();
+        console.log("SOUND", this.$settings.sound)
+        if (this.$settings.sound) {
+          this.sounds[0].play();
+        }
       }
 
       this.renderer.render(this.container)

@@ -1,5 +1,10 @@
 <template>
     <div>
+      <b-form-checkbox
+        id="sound"
+        v-model="$settings.sound"
+        name="sound"
+      >Sound</b-form-checkbox>
       <b-form-radio-group
         id="btn-radios-1"
         v-model="$i18n.locale"
@@ -13,7 +18,7 @@
 <script>
 
 export default {
-  name: 'Tutorial',
+  name: 'Settings',
   data() {
     return {
       options: [
