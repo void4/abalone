@@ -1,6 +1,6 @@
 <template>
-  <div style="width:50%;">
-    <canvas id="myChart" width="400" height="400"></canvas>
+  <div style="width:80%;height:800px;">
+    <canvas id="myChart" style="width:100%;height:100%;" width="400" height="400"></canvas>
   </div>
   <!--<img alt="Vue logo" src="../assets/graph.png">-->
 </template>
@@ -42,6 +42,7 @@ export default {
               },
               options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 title: {
                   display: true,
                   text: 'Player Ratings'

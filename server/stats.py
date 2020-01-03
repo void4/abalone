@@ -62,11 +62,15 @@ def getStats():
         # Upper and lower bounds respectively
         U = []
         D = []
+        # Point radii
+        R = []
         for hi, h in enumerate(history):
             mu = h[p]["r"].mu*multiplier
             sigma = h[p]["r"].sigma*multiplier*0.3
+            pointradius = "transparent" if history[hi-1][p]["r"].mu*multiplier==mu else "#ffffff"
+            R.append(pointradius)
             X.append(hi)
-            Y.append({"x":hi, "y":mu})
+            Y.append({"x":hi, "y":mu})#, "radius": pointradius
             U.append({"x":hi, "y":mu+sigma})
             D.append({"x":hi, "y":mu-sigma})
 
@@ -80,6 +84,8 @@ def getStats():
           "data": Y,
           "tension": 0,
           "borderColor": colorFromName(p),
+          "pointBorderColor": R,
+          "pointBackgroundColor": R,
         }
         up = {
           "fill": len(datasets),
