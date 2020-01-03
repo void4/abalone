@@ -347,8 +347,7 @@ export default {
       }
     },
   },
-  mounted() {
-
+  created() {
     this.source = new EventSource(`${window.location.protocol}//${window.location.hostname}:5000/stream`);
     // console.log(this.source)
 
@@ -371,6 +370,12 @@ export default {
           console.log("Event Source Closed");
       }
     }
+  },
+  destroyed() {
+    //console.log("Destroyed")
+    this.source.close();
+  },
+  mounted() {
 
     this.initGame();
 
