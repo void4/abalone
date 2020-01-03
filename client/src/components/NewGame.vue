@@ -20,13 +20,13 @@
         ></b-form-radio-group>
       </b-form-group>
 
-        <b-button id="newgame" v-on:click="startGame('pvp')">{{ $t('pvp') }}</b-button>
 
         <b-form-checkbox id="ranked" type="checkbox" v-model="ranked">{{ $t('ranked') }}</b-form-checkbox>
         <br>
         <b-form-input id="invitelink" type="text" v-model="invitelink" :placeholder="$t('enterplayername')"></b-form-input>
-        <b-button id="copylink">{{ $t('copylink') }}</b-button>
+        <!--<b-button id="copylink">{{ $t('copylink') }}</b-button>-->
 
+        <b-button id="newgame" v-on:click="startGame('pvp')">{{ $t('pvp') }}</b-button>
         <b-button id="newgame2" @click="startGame('ai')">{{ $t('againstai') }}</b-button>
         <b-button id="newgame3" @click="startGame('myself')">{{ $t('againstmyself') }}</b-button>
     </div>
@@ -64,7 +64,7 @@ export default {
       const path = `${window.location.protocol}//${window.location.hostname}:5000/newgame`;
       axios.get(path, { params: { gamemode, ranked: this.ranked, invite: this.invitelink, timetomove: this.timetomove, layout: this.layout } })
         .then((res) => {
-          this.invitelink = res.data.invitelink;
+          //this.invitelink = res.data.invitelink;
           this.$root.$emit('loadgames');
           this.$root.$emit('loadgame', res.data.gid);
         })
