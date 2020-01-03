@@ -8,9 +8,10 @@
         <b-list-group>
           <b-list-group-item v-for="game in games">
             Game #{{ game.gid }}
-            <div v-if="game.opponent">vs {{ game.opponent }}</div>
+            <div v-if="game.opponent">{{ $t('vs') }} {{ game.opponent }}</div>
             <div v-else>spectating</div>
-            Ranked: {{ game.ranked }}
+            {{ $t(game.ranked ? 'ranked' : 'unranked') }}
+            <br>
             <template v-if="game.invited">
               <button @click="inviteresponse(game.gid, true)">{{ $t('acceptinvite') }}</button>
               <button @click="inviteresponse(game.gid, false)">{{ $t('rejectinvite') }}</button>
@@ -48,9 +49,14 @@ export default {
       const path = `${window.location.protocol}//${window.location.hostname}:5000/gamelist`;
       axios.get(path)
         .then((res) => {
-          console.log(res.data);
+          //console.log(res.data);
           this.info = res.data.info;
+          var firstload = this.games.length == 0;
           this.games = res.data.games;
+          if (firstload) {
+            //console.log("FIRSTLOAD")
+            this.loadgame(this.games[0].gid);
+          }
         })
         .catch(() => {
           this.games = [];

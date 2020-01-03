@@ -165,7 +165,7 @@ export default {
           this.game = res.data.board;
           this.state = res.data.state;
           this.info = res.data.info;
-          console.log("GAMEINFO", this.gameinfo)
+          //console.log("GAMEINFO", this.gameinfo)
           this.gameinfo = res.data.gameinfo;
           this.drawGame();
           if (this.timeref == null && this.gameinfo.timetomove && this.gameinfo.p1time < this.gameinfo.timetomove) {
@@ -237,7 +237,7 @@ export default {
         //this.alpha = 0.5;
         let ball = vm.state[this.index][1];
         let selected = vm.selected.includes(this.index);
-        console.log(this.index, vm.selected, selected)
+        //console.log(this.index, vm.selected, selected)
         if (!selected) {
           if (ball == null || (ball != vm.gameinfo.next)) {
             console.log("attempt move", vm.selected, this.index)
@@ -326,7 +326,7 @@ export default {
       }
 
       if (changes > 0) {
-        console.log("SOUND", this.$settings.sound)
+        //console.log("SOUND", this.$settings.sound)
         if (this.$settings.sound) {
           this.sounds[0].play();
         }
@@ -340,7 +340,7 @@ export default {
       } else {
           nextball = '●';
       }
-      console.log(nextball)
+      //console.log(nextball)
       window.document.title = "Abalone | " + nextball + " 's " + this.$t('turn');
       this.turn = nextball + " 's " + this.$t('turn');
     },
