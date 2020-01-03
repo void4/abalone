@@ -16,7 +16,7 @@
             <h5 v-if="gameinfo.ranked">{{ $t('ranked') }}</h5>
             <h5 v-else>({{ $t('unranked') }})</h5>
             <h5 v-if="gameinfo.p1time || gameinfo.p2time" v-bind:class="{ p1timeover: !gameinfo.p1time || !gameinfo.p2time }">P1: {{ gameinfo.p1time }} | {{ gameinfo.timetomove }} | P2: {{ gameinfo.p2time }}</h5>
-            <h5 v-if="gameinfo.out">{{ '●'.repeat(gameinfo.out[0]) }} | {{ '○'.repeat(gameinfo.out[1]) }}</h5>
+            <h5 v-if="gameinfo.out">{{ '○'.repeat(gameinfo.out[0]) }} | {{ '●'.repeat(gameinfo.out[1]) }}</h5>
           </template>
           <!--<pre style="text-align: left;">{{ game }}</pre>-->
           <canvas id="cvs"></canvas>
