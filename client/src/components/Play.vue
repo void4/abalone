@@ -92,7 +92,9 @@ import {Matrix} from 'pixi.js'
 import {Texture} from 'pixi.js'
 import {BaseTexture} from 'pixi.js'
 import * as PIXI from 'pixi.js';
-import 'pixi-sound';
+import SOUND from 'pixi-sound';
+
+PIXI["sound"] = SOUND; // ts wont complain
 
 import axios from 'axios';
 import NewGame from '@/components/NewGame.vue';
@@ -214,13 +216,11 @@ export default {
       let container = new Container()
       this.container = container;
 
-      /*
-      console.log(PIXI)
+      //console.log(PIXI)
       this.sounds = [];
       for (let i=0;i<1;i++) {
         this.sounds.push(PIXI.sound.Sound.from("move"+i+'.mp3'));
       }
-      */
 
       this.tex_board = Texture.from("board.svg")
       let sprite = new Sprite(this.tex_board)
@@ -305,19 +305,31 @@ export default {
       }
     },
     drawGame() {
+
+      var changes = 0;
       for (const [index, element] of this.state.entries()) {
         let sprite = this.sprites[index];
+        let oldtexture = sprite.texture;
         if (element[1] == null) {
           sprite.texture = this.tex_empty;
           sprite.cursor = 'pointer';
         } else if (element[1] == 0) {
-          this.sprites[index].texture = this.tex_zero;
+          sprite.texture = this.tex_zero;
           sprite.cursor = 'grab';
         } else {
-          this.sprites[index].texture = this.tex_one;
+          sprite.texture = this.tex_one;
           sprite.cursor = 'grab';
         }
+
+        if (oldtexture != sprite.texture) {
+          changes += 1;
+        }
       }
+
+      if (changes > 0) {
+        this.sounds[0].play();
+      }
+
       this.renderer.render(this.container)
       // firefox tab title has inverted colors...
       let nextball = '-'
