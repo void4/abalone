@@ -1,12 +1,6 @@
 <template>
     <div>
-        <div class="sidebar">
-        <NewGame/>
-        <hr>
-        <GameList/>
-        <PlayerList/>
-        <Settings/>
-        </div>
+
 
         <div class="gamebar">
           <br>
@@ -28,6 +22,14 @@
           <input id="moveinput" type="hidden">
         </div>
 
+        <div class="sidebar">
+        <NewGame/>
+        <hr>
+        <GameList/>
+        <PlayerList/>
+        <Settings/>
+        </div>
+
         <div class="userbar">
           <Login/>
           <hr>
@@ -45,39 +47,71 @@
 }
 
 .sidebar {
-  position: absolute;
-  top: 0px;
-  left: 0;
-  width: 18%;
-  align: left;
   background-color: rgba(200,200,200,0.5);
-  z-index: 100;
-  overflow-y: scroll;
-  bottom: 0;
 }
 
 .gamebar {
-  position: absolute;
   align: center;
-  left: 0px;
   width: 100%;
   background-color: #edebe9;
 }
+
+@media only screen and (min-width: 600px) {
+  .sidebar {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 18%;
+    align: left;
+    z-index: 100;
+    overflow-y: scroll;
+    bottom: 0;
+  }
+
+  .userbar {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 18%;
+    align: right;
+
+    z-index: 100;
+    bottom: 0;
+  }
+
+  .gamebar {
+    position: absolute;
+    left: 0px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+  }
+
+  .userbar {
+    position: relative;
+    width: 100%;
+  }
+
+  .gamebar {
+    position: relative;
+  }
+}
+
+
 
 html {
   background-color: #edebe9;
 }
 
 .userbar {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  width: 18%;
-  align: right;
   background-color: rgba(0,0,250,0.1);
-  z-index: 100;
-  bottom: 0;
 }
+
+
 
 </style>
 
