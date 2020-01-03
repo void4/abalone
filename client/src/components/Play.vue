@@ -5,6 +5,7 @@
         <hr>
         <GameList/>
         <PlayerList/>
+        <Settings/>
         </div>
 
         <div class="gamebar">
@@ -29,8 +30,6 @@
 
         <div class="userbar">
           <Login/>
-          <hr>
-          <Settings/>
           <hr>
           <Tutorial/>
           <hr>

@@ -13,7 +13,6 @@
       {{ $t('tut4') }}
       <br><br>
       </p>
-      <br>
       <b>{{ $t('quote') }}</b>
 
       {{ quote }}

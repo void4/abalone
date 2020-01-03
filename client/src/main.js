@@ -69,6 +69,7 @@ var i18n = new VueI18n({
       ranked: 'RANKED',
       unranked: 'unranked',
       turn: 'turn',
+      settings: 'Settings',
     },
     de: {
       hello: 'Hallo',
@@ -117,6 +118,7 @@ var i18n = new VueI18n({
       ranked: 'GEWERTET',
       unranked: 'nicht gewertet',
       turn: 'Zug',
+      settings: 'Einstellungen',
     }
   }
 })

@@ -1,5 +1,6 @@
 <template>
     <div>
+      <h3>{{ $t('settings') }}</h3>
       <b-form-checkbox
         id="sound"
         v-model="$settings.sound"
