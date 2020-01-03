@@ -5,7 +5,7 @@ from collections import defaultdict, Counter
 import hashlib
 
 
-def colorFromName(name):
+def colorFromName(name, alpha=1.0):
     #cache this somewhere...
     #maybe compute this clientside?
     hash_object = hashlib.sha256(name.encode("utf-8"))
@@ -13,8 +13,7 @@ def colorFromName(name):
     r = int(hex_dig[-2:], 16)
     g = int(hex_dig[-4:-2], 16)
     b = int(hex_dig[-6:-4], 16)
-    a = 1.0
-    return f"rgba({r},{g},{b},{a})"
+    return f"rgba({r},{g},{b},{alpha})"
 
 def getStats():
     mgames = [mg for mg in MGame.query.all() if mg.winner != None and mg.ranked != 0]
@@ -60,9 +59,16 @@ def getStats():
 
         X = []
         Y = []
+        # Upper and lower bounds respectively
+        U = []
+        D = []
         for hi, h in enumerate(history):
+            mu = h[p]["r"].mu*multiplier
+            sigma = h[p]["r"].sigma*multiplier*0.3
             X.append(hi)
-            Y.append({"x":hi, "y":h[p]["r"].mu*multiplier})#-2*h[p]["r"].sigma})##viz uncertainty as well!
+            Y.append({"x":hi, "y":mu})
+            U.append({"x":hi, "y":mu+sigma})
+            D.append({"x":hi, "y":mu-sigma})
 
         mu = d['r'].mu*multiplier
         sigma = d['r'].sigma*multiplier
@@ -72,10 +78,28 @@ def getStats():
           "label": p+" %.2f+-%.2f (%i games)" % (mu, sigma, numgames),
           "fill": False,
           "data": Y,
+          "tension": 0,
           "borderColor": colorFromName(p),
         }
-
+        up = {
+          "fill": len(datasets),
+          "data": U,
+          "backgroundColor": colorFromName(p, 0.2),
+          "borderColor": "transparent",
+          "pointRadius": 0,
+          "tension": 0,
+        }
+        down = {
+          "fill": len(datasets),
+          "data": D,
+          "backgroundColor": colorFromName(p, 0.2),
+          "borderColor": "transparent",
+          "pointRadius": 0,
+          "tension": 0,
+        }
         datasets.append(line)
+        #datasets.append(up)
+        #datasets.append(down)
 
-    print(datasets)
+    #print(datasets)
     return datasets
