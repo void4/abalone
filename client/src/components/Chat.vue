@@ -37,6 +37,7 @@ export default {
       axios.get(path, { params: { chatinput: this.chatinput } })
         .then((res) => {
           //this.chat += res.data.chat;
+          this.chatinput = "";
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -46,7 +47,24 @@ export default {
   },
   mounted() {
     this.$root.$on('chatappend', (msg) => {
-      this.chat += msg + "\n"
+      this.chat += msg + "\n";
+      var chatarea = document.getElementById("chatarea");
+      chatarea.scrollTop = chatarea.scrollHeight;
+    });
+
+    // Get the input field
+    var input = document.getElementById("chatinput");
+
+    // Execute a function when the user releases a key on the keyboard
+    let vm = this;
+    input.addEventListener("keyup", function(event) {
+      // Number 13 is the "Enter" key on the keyboard
+      if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        vm.chatsubmit();
+      }
     });
   },
 };
