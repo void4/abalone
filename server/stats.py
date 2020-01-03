@@ -53,6 +53,8 @@ def getStats():
 
     datasets = []
 
+    multiplier = 40#1
+
     for p,d in sorted(players.items(), key=lambda x:x[1]["r"].mu, reverse=True):
         #print(p, d)
 
@@ -60,14 +62,14 @@ def getStats():
         Y = []
         for hi, h in enumerate(history):
             X.append(hi)
-            Y.append({"x":hi, "y":h[p]["r"].mu})#-2*h[p]["r"].sigma})##viz uncertainty as well!
+            Y.append({"x":hi, "y":h[p]["r"].mu*multiplier})#-2*h[p]["r"].sigma})##viz uncertainty as well!
 
-        mu = d['r'].mu
-        sigma = d['r'].sigma
+        mu = d['r'].mu*multiplier
+        sigma = d['r'].sigma*multiplier
         numgames = d['g']
 
         line = {
-          "label": p+" %.2f+-%.2f %i" % (mu, sigma, numgames),
+          "label": p+" %.2f+-%.2f (%i games)" % (mu, sigma, numgames),
           "fill": False,
           "data": Y,
           "borderColor": colorFromName(p),
