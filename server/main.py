@@ -273,10 +273,14 @@ def game():
 		return jsonify({"info":"No GameID"})
 
 	g = getGame(gameid)
+	#XXX is gameid a string here? doesn't this fail?
 	mg = MGame.query.get(gameid)
 
 	if g is None or mg is None:
 		return jsonify({"info":"Game not found"})
+
+	broadcast("global", "game"+str(gameid))
+	# XXX will the thread subscribe fast enough?
 
 	user = getRequestUser()
 	movestr = request.args.get("move", None)
@@ -348,7 +352,7 @@ def game():
 							mg.winner = mg.p1
 
 					now = datetime.now().replace(microsecond=0).time()
-					broadcast('chat', '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
+					broadcast("game"+gameid, '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
 
 			if not g.is_over():#check for winner?
 				if mg.p2 == AIUSER.id:
@@ -378,7 +382,7 @@ def game():
 							mg.winner = mg.p2
 
 					now = datetime.now().replace(microsecond=0).time()
-					broadcast('chat', '[%s] AI MOVE %s' % (now.isoformat(), aimovestr))#TODO user
+					broadcast("game"+gameid, '[%s] AI MOVE %s' % (now.isoformat(), aimovestr))#TODO user
 
 	if g.is_over() or mg.winner is not None:
 		moveinfo = "Game Over!"
@@ -422,16 +426,35 @@ from stats import getStats
 def route_ratings():
 	return jsonify(getStats())
 
+"""
+@app.route("/listen")
+def route_listen():
+	channel = request.args.get("channel")
+	broadcast("global", channel)
+"""
+
 def event_stream():
 	pubsub = red.pubsub()
+	pubsub.subscribe("global")
 	pubsub.subscribe('chat')
 	for message in pubsub.listen():
-		#print(type(message["data"]))
-		#print("STREAM", message)
-		if isinstance(message["data"], bytes):
-			yield 'data: %s\n\n' % message['data'].decode('utf-8')
+		print(pubsub)
+		if message["channel"] == b"global":
+			if isinstance(message["data"], bytes):
+				newchannel = message["data"]
+				if newchannel not in pubsub.channels:
+					for channel in pubsub.channels:
+						if channel.decode("utf-8").startswith("game"):
+							pubsub.unsubscribe(channel)
+					pubsub.subscribe(newchannel)
 		else:
-			yield 'data: %s\n\n' % message["data"]
+			#print(type(message["data"]))
+			#print("STREAM", message)
+			# how to prevent double update for mover?
+			if isinstance(message["data"], bytes):
+				yield 'data: %s\n\n' % message['data'].decode('utf-8')
+			else:
+				yield 'data: %s\n\n' % message["data"]
 
 @app.route('/stream')
 def stream():
