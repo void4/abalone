@@ -75,6 +75,10 @@ def route_login():
 	if user is None or not user.check_password(password):
 		return jsonify({"info":"Invalid username or password"})
 
+	tmpid = request.args.get("tmpid")
+	# XXX dangerous, broadcast injection anywhere possible rn
+	broadcast("u|"+tmpid, "u|"+username)
+
 	access_token = create_access_token(identity=username)
 	return jsonify({"info":"logged in!", "status":"success", "token":access_token})
 
@@ -279,10 +283,13 @@ def game():
 	if g is None or mg is None:
 		return jsonify({"info":"Game not found"})
 
-	broadcast("global", "game"+str(gameid))
+	real, user = getRequestOrTempUser()
+
+	broadcast("u|"+user.username, "g|"+str(gameid))
 	# XXX will the thread subscribe fast enough?
 
-	user = getRequestUser()
+	MOVES = []
+
 	movestr = request.args.get("move", None)
 	opponent = mg.p1 if mg.p2 == user.id else mg.p2
 	if movestr == "leave":
@@ -309,7 +316,10 @@ def game():
 			if movestr.startswith("["):
 				movestr = getMovestr(g, movestr)
 			# Can't move if game is over
-			move = g.move_from_str(movestr)
+			try:
+				move = g.move_from_str(movestr)
+			except KeyError:
+				move = None
 			if move is None:
 				raise Exception("invalid move")
 			result = g.move(*move)
@@ -351,8 +361,7 @@ def game():
 							# Player 1 won
 							mg.winner = mg.p1
 
-					now = datetime.now().replace(microsecond=0).time()
-					broadcast("game"+gameid, '[%s] MOVE %s' % (now.isoformat(), movestr))#TODO user
+					MOVES.append(movestr)
 
 			if not g.is_over():#check for winner?
 				if mg.p2 == AIUSER.id:
@@ -381,14 +390,19 @@ def game():
 							# Player 1 won
 							mg.winner = mg.p2
 
-					now = datetime.now().replace(microsecond=0).time()
-					broadcast("game"+gameid, '[%s] AI MOVE %s' % (now.isoformat(), aimovestr))#TODO user
+					#now = datetime.now().replace(microsecond=0).time()
+					#broadcast("game"+gameid, '[%s] AI MOVE %s' % (now.isoformat(), aimovestr))#TODO user
 
 	if g.is_over() or mg.winner is not None:
 		moveinfo = "Game Over!"
 
 	# TODO db.session.add(mg)?!
 	db.session.commit()
+
+	if MOVES:
+		now = datetime.now().replace(microsecond=0).time()
+		broadcast("g|"+gameid, '[%s] MOVE %s' % (now.isoformat(), MOVES[0]))#TODO user
+
 	state = [[field.xycoords, field.color] for field in g.board]
 
 	gameinfo = getGameInfo(mg)
@@ -433,32 +447,58 @@ def route_listen():
 	broadcast("global", channel)
 """
 
-def event_stream():
+streamcounter = 0
+
+def event_stream(user):
+	print("Starting stream", user)
+	global streamcounter
+	streamcounter += 1
+	esid = streamcounter
 	pubsub = red.pubsub()
-	pubsub.subscribe("global")
-	pubsub.subscribe('chat')
+	#this can't be global, this has to be user specific, otherwise all users will be subscribed!
+	#XXX watch out, user could get name 'game'! prefix somehow
+	pubsub.subscribe("u|"+user.username)
+	#pubsub.subscribe('chat')
 	for message in pubsub.listen():
-		print(pubsub)
-		if message["channel"] == b"global":
+		print("MSG", esid, user, message["channel"], message["data"], pubsub.channels)
+		#print(message["channel"], user.username, message["channel"]==user.username)
+		if message["channel"].decode("utf-8").startswith("u|"):# == user.username:
 			if isinstance(message["data"], bytes):
 				newchannel = message["data"]
+				prefix = newchannel.decode("utf-8")[:2]
 				if newchannel not in pubsub.channels:
 					for channel in pubsub.channels:
-						if channel.decode("utf-8").startswith("game"):
+						if channel.decode("utf-8").startswith(prefix):
+							print("UNSUB", channel)
 							pubsub.unsubscribe(channel)
+					print("SUB", newchannel)
 					pubsub.subscribe(newchannel)
 		else:
 			#print(type(message["data"]))
 			#print("STREAM", message)
 			# how to prevent double update for mover?
+			# let client send unique update id with /game call, send it back, then let client check
+			# alternatively, use username-channel, and one public/spectator one
 			if isinstance(message["data"], bytes):
 				yield 'data: %s\n\n' % message['data'].decode('utf-8')
 			else:
 				yield 'data: %s\n\n' % message["data"]
 
+def getRequestOrTempUser():
+	user = getRequestUser()
+	if user is not None:
+		return True, user
+	else:
+		#print(request.args)
+		tmpid = request.args.get("tmpid")
+		user = User(username=tmpid)
+		return False, user
+
+@jwt_required
 @app.route('/stream')
 def stream():
-	return Response(event_stream(),
+	real, user = getRequestOrTempUser()
+	return Response(event_stream(user),
 						  mimetype="text/event-stream")
 
 import os

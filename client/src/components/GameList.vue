@@ -46,6 +46,7 @@ export default {
   },
   methods: {
     loadgames() {
+      console.log("LOADGAMES")
       const path = `${window.location.protocol}//${window.location.hostname}:5000/gamelist`;
       axios.get(path)
         .then((res) => {

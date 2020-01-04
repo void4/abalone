@@ -23,6 +23,12 @@ import axios from 'axios';
 import cookie from 'cookie-machine';
 
 axios.interceptors.request.use((config) => {
+
+  if (config.params !== undefined) {
+    const tmpid = cookie.get('tmpid');
+    config.params["tmpid"] = tmpid;
+  }
+
   const token = cookie.get('access_token');
 
   if (token != null) {
@@ -87,6 +93,8 @@ export default {
       // clear game list
       this.$root.$emit('loadgames');
     },
+  },
+  created() {
   },
   mounted() {
     // check if logged in, if yes, loggedin = true

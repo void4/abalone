@@ -130,6 +130,8 @@ import SOUND from 'pixi-sound';
 PIXI["sound"] = SOUND; // ts wont complain
 
 import axios from 'axios';
+import cookie from 'cookie-machine';
+
 import NewGame from '@/components/NewGame.vue';
 import Login from '@/components/Login.vue';
 import GameList from '@/components/GameList.vue';
@@ -396,7 +398,11 @@ export default {
     },
   },
   created() {
-    this.source = new EventSource(`${window.location.protocol}//${window.location.hostname}:5000/stream`);
+    let tmpid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    cookie.set('tmpid', tmpid);
+
+    const token = cookie.get('access_token');
+    this.source = new EventSource(`${window.location.protocol}//${window.location.hostname}:5000/stream?token=${token}&tmpid=${tmpid}`);
     // console.log(this.source)
 
     this.source.onopen = function(evt) {
