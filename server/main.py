@@ -458,7 +458,7 @@ def event_stream(user):
 	#this can't be global, this has to be user specific, otherwise all users will be subscribed!
 	#XXX watch out, user could get name 'game'! prefix somehow
 	pubsub.subscribe("u|"+user.username)
-	#pubsub.subscribe('chat')
+	pubsub.subscribe('chat')#TODO reenable
 	for message in pubsub.listen():
 		print("MSG", esid, user, message["channel"], message["data"], pubsub.channels)
 		#print(message["channel"], user.username, message["channel"]==user.username)
@@ -480,7 +480,7 @@ def event_stream(user):
 			# let client send unique update id with /game call, send it back, then let client check
 			# alternatively, use username-channel, and one public/spectator one
 			if isinstance(message["data"], bytes):
-				yield 'data: %s\n\n' % message['data'].decode('utf-8')
+				yield 'data: %s\n\n' % json.dumps({"channel": message["channel"].decode("utf-8"), "data":message['data'].decode('utf-8')})
 			else:
 				yield 'data: %s\n\n' % message["data"]
 

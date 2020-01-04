@@ -412,8 +412,12 @@ export default {
     let vm = this;
     this.source.onmessage = function (event) {
       console.log("EVT", event.data);
-      vm.$root.$emit('chatappend', event.data);
-      vm.getGame();
+      var j = JSON.parse(event.data);
+      if (j["channel"]=="chat") {
+        vm.$root.$emit('chatappend', j["data"]);
+      } else {
+        vm.getGame();
+      }
     };
 
 
