@@ -56,6 +56,10 @@
   background-color: #edebe9;
 }
 
+.userbar {
+  background-color: rgba(0,0,250,0.1);
+}
+
 @media only screen and (min-width: 600px) {
   .sidebar {
     position: absolute;
@@ -74,7 +78,6 @@
     right: 0px;
     width: 18%;
     align: right;
-
     z-index: 100;
     bottom: 0;
   }
@@ -107,9 +110,7 @@ html {
   background-color: #edebe9;
 }
 
-.userbar {
-  background-color: rgba(0,0,250,0.1);
-}
+
 
 
 
