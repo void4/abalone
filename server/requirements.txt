@@ -8,3 +8,4 @@ redis
 trueskill
 matplotlib
 pyopenssl
+flask_monitoringdashboard

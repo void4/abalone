@@ -6,6 +6,7 @@ from flask_jwt_extended import (
 	JWTManager, jwt_required, create_access_token,
 	get_jwt_identity
 )
+import flask_monitoringdashboard as dashboard
 
 from datetime import datetime
 from random import randint, choice
@@ -24,6 +25,8 @@ app.config.from_object(Config)
 app.config['JWT_SECRET_KEY'] = "C6SBm83gDenAZJbx4fUX9"
 jwt = JWTManager(app)
 
+dashboard.config.init_from(file='dashboard.cfg')
+dashboard.bind(app)
 
 from models import db, MGame, User
 db.app = app
