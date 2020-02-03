@@ -25,6 +25,7 @@ var i18n = new VueI18n({
     en: {
       hello: 'Hello',
       play: 'Play',
+      rules: 'Rules',
       stats: 'Stats',
       about: 'About',
       tut0: '1,2 or 3 marbles can be moved.',
@@ -74,6 +75,7 @@ var i18n = new VueI18n({
     de: {
       hello: 'Hallo',
       play: 'Spielen',
+      rules: 'Regeln',
       stats: 'Statistiken',
       about: 'Info',
       tut0: 'Es können 1,2 oder 3 Kugeln geschoben werden.',
@@ -91,7 +93,7 @@ var i18n = new VueI18n({
       pvp: 'Spieler gegen Spieler',
       ranked: 'Gewertet?',
       playername: 'Spielername',
-      enterplayername: 'Benutzername des Gegners eingeben',
+      enterplayername: 'Benutzername des Gegners eingeben',// change this to Mitspieler?
       copylink: 'Link kopieren',
       againstai: 'Gegen KI',
       againstmyself: 'Gegen mich selbst',

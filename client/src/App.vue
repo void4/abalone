@@ -4,6 +4,7 @@
     <div>
       <b-nav tabs align="center">
       <b-nav-item to="/">{{ $t('play') }}</b-nav-item>
+      <b-nav-item to="/rules">{{ $t('rules') }}</b-nav-item>
       <b-nav-item v-if="showstats" to="/stats">{{ $t('stats') }}</b-nav-item>
       <b-nav-item to="/about">{{ $t('about') }}</b-nav-item>
       </b-nav>

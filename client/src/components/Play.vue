@@ -2,7 +2,7 @@
     <div>
 
 
-        <div class="gamebar">
+        <div id="gamebar">
           <br>
           <template v-if="gameinfo">
             <b>{{ gameinfo.p1 }} {{ $t('vs') }} {{ gameinfo.p2 }}</b>
@@ -17,12 +17,14 @@
           <!--<button id="move" v-on:click="move()">Move</button>-->
           <p>{{ turn }}</p>
           <p>{{ info }}</p>
-          <button id="surrender" v-on:click="surrender()">{{ $t('surrender') }}</button>
-          <button v-if="!gameinfo.ranked" id="leave" v-on:click="leave()">{{ $t('leave') }}</button>
+          <template v-if="gameinfo">
+            <button id="surrender" v-on:click="surrender()">{{ $t('surrender') }}</button>
+            <button v-if="!gameinfo.ranked" id="leave" v-on:click="leave()">{{ $t('leave') }}</button>
+          </template>
           <input id="moveinput" type="hidden">
         </div>
 
-        <div class="sidebar">
+        <div id="sidebar">
         <NewGame/>
         <hr>
         <GameList/>
@@ -30,10 +32,9 @@
         <Settings/>
         </div>
 
-        <div class="userbar">
+        <div id="userbar">
+          <img alt="◐" v-on:click="toggleDarkmode()" class="btn top-right" title="Switch between dark and light mode">
           <Login/>
-          <hr>
-          <Tutorial/>
           <hr>
           <Chat/>
         </div>
@@ -46,22 +47,22 @@
   color: red;
 }
 
-.sidebar {
+#sidebar {
   background-color: rgba(200,200,200,0.5);
 }
 
-.gamebar {
+#gamebar {
   align: center;
   width: 100%;
   background-color: #edebe9;
 }
 
-.userbar {
+#userbar {
   background-color: rgba(0,0,250,0.1);
 }
 
 @media only screen and (min-width: 600px) {
-  .sidebar {
+  #sidebar {
     position: absolute;
     top: 0px;
     left: 0;
@@ -72,7 +73,7 @@
     bottom: 0;
   }
 
-  .userbar {
+  #userbar {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -82,36 +83,39 @@
     bottom: 0;
   }
 
-  .gamebar {
+  #gamebar {
     position: absolute;
     left: 0px;
   }
 }
 
 @media only screen and (max-width: 600px) {
-  .sidebar {
+  #sidebar {
     position: relative;
     width: 100%;
   }
 
-  .userbar {
+  #userbar {
     position: relative;
     width: 100%;
   }
 
-  .gamebar {
+  #gamebar {
     position: relative;
   }
 }
 
 
 
-html {
+body {
   background-color: #edebe9;
 }
 
 
-
+.dark-mode {
+  color: white;
+  background-color: #0e1318 !important;
+}
 
 
 </style>
@@ -169,11 +173,17 @@ export default {
     Login,
     GameList,
     Chat,
-    Tutorial,
     PlayerList,
     Settings,
   },
   methods: {
+    toggleDarkmode() {
+      //var element = document.body;
+      var elements = [document.getElementById('userbar'), document.getElementById('gamebar'), document.getElementById('sidebar')]
+      for (var element of elements) {
+        element.classList.toggle("dark-mode");
+      }
+    },
     startTimer() {
       console.log("STARTING TIMER")
       this.timeref = setInterval(this.timer, 1000)
@@ -448,7 +458,6 @@ export default {
       this.gameid = gid;
       this.getGame();
     });
-
   },
 };
 

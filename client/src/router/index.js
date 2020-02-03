@@ -2,25 +2,31 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import About from '../components/About.vue';
 import Play from '../components/Play.vue';
+import Tutorial from '../components/Tutorial.vue';
 import Stats from '../components/Stats.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/about',
-    name: 'About',
-    component: About,
-  },
-  {
     path: '/',
     name: 'Play',
     component: Play,
   },
   {
+    path: '/rules',
+    name: 'Tutorial',
+    component: Tutorial,
+  },
+  {
     path: '/stats',
     name: 'Stats',
     component: Stats,
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About,
   },
 ];
 
