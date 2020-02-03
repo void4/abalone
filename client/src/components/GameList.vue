@@ -2,7 +2,7 @@
     <div class="gamelist">
         <h3>{{ $t('gamelist') }}</h3>
 
-        <button id="reload" v-on:click="loadgames()">{{ $t('reload') }}</button>
+        <button id="reload" v-on:click="loadgames()">⟳ {{ $t('reload') }}</button>
 
         <p>{{ info }}</p>
         <b-list-group>
