@@ -3,7 +3,8 @@
     <h3>{{ $t('playerlist') }}</h3>
     <b-list-group>
       <b-list-group-item v-for="player in players">
-        {{ player }}
+        <b title="Abalone Master" class="titles">{{player.titles}}</b>
+        {{ player.name }}
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -12,6 +13,10 @@
 <style scoped>
 * {
   background-color: rgba(100, 100, 100, 0.1);
+}
+
+.titles {
+    color: #d59020;
 }
 </style>
 

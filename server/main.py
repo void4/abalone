@@ -97,7 +97,7 @@ def ping_pong():
 
 @app.route("/players")
 def route_players():
-	return jsonify({"players": [user.username for user in User.query.all()]})
+	return jsonify({"players": [{"name":user.username, "titles":""} for user in User.query.all()]})
 @jwt_required
 
 @app.route("/name", methods=["GET"])
