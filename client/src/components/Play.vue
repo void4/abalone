@@ -56,7 +56,7 @@
 }
 
 #userbar {
-  background-color: rgba(0,0,250,0.1);
+  background-color: rgba(6, 8, 10, 0.1);;
 }
 
 @media only screen and (min-width: 600px) {
@@ -69,6 +69,7 @@
     z-index: 100;
     overflow-y: scroll;
     bottom: 0;
+    scrollbar-color: #495057 rgba(6, 8, 10, 0.1);
   }
 
   #userbar {

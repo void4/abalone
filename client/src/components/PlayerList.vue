@@ -1,13 +1,19 @@
 <template>
   <div class="playerlist">
-  <h3>{{ $t('playerlist') }}</h3>
-  <b-list-group>
-    <b-list-group-item v-for="player in players">
-      {{ player }}
-    </b-list-group-item>
-  </b-list-group>
+    <h3>{{ $t('playerlist') }}</h3>
+    <b-list-group>
+      <b-list-group-item v-for="player in players">
+        {{ player }}
+      </b-list-group-item>
+    </b-list-group>
   </div>
 </template>
+
+<style scoped>
+* {
+  background-color: rgba(100, 100, 100, 0.1);
+}
+</style>
 
 
 <script>
