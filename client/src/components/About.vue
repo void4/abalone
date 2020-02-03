@@ -2,7 +2,9 @@
     <div>
         <h3>About</h3>
         {{ $t('feedback') }}
-        <img alt="Vue logo" src="mx.png">
+        <a href="mailto:feedback@qewasd.com" class="btn btn-secondary">
+              <i class=""></i>feedback@qewasd.com
+        </a>
         :)
     </div>
 </template>
