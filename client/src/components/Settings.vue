@@ -13,6 +13,8 @@
         buttons
         name="radios-btn-default"
       ></b-form-radio-group>
+      <br>
+      <img alt="◐" v-on:click="toggleDarkmode()" class="btn top-right" title="Switch between dark and light mode">
     </div>
 </template>
 
@@ -31,6 +33,15 @@ export default {
   components: {
   },
   methods: {
+    toggleDarkmode() {
+      //var element = document.body;
+      var elements = [document.body, document.getElementById('userbar'), document.getElementById('gamebar'), document.getElementById('sidebar')]
+      for (var element of elements) {
+        if (element !== null) {
+          element.classList.toggle("dark-mode");
+        }
+      }
+    },
   },
   mounted() {
   },

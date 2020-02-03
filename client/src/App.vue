@@ -7,6 +7,7 @@
       <b-nav-item to="/rules">{{ $t('rules') }}</b-nav-item>
       <b-nav-item v-if="showstats" to="/stats">{{ $t('stats') }}</b-nav-item>
       <b-nav-item to="/about">{{ $t('about') }}</b-nav-item>
+      <b-nav-item to="/settings">{{ $t('settings') }}</b-nav-item>
       </b-nav>
     </div>
     <router-view/>
@@ -15,7 +16,7 @@
 
 <style>
 
-body {
+html {
   background-color: #edebe9;
 }
 

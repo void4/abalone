@@ -29,11 +29,9 @@
         <hr>
         <GameList/>
         <PlayerList/>
-        <Settings/>
         </div>
 
         <div id="userbar">
-          <img alt="◐" v-on:click="toggleDarkmode()" class="btn top-right" title="Switch between dark and light mode">
           <Login/>
           <hr>
           <Chat/>
@@ -177,13 +175,6 @@ export default {
     Settings,
   },
   methods: {
-    toggleDarkmode() {
-      //var element = document.body;
-      var elements = [document.getElementById('userbar'), document.getElementById('gamebar'), document.getElementById('sidebar')]
-      for (var element of elements) {
-        element.classList.toggle("dark-mode");
-      }
-    },
     startTimer() {
       console.log("STARTING TIMER")
       this.timeref = setInterval(this.timer, 1000)
