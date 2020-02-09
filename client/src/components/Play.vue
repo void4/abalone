@@ -131,6 +131,8 @@ import {BaseTexture} from 'pixi.js'
 import * as PIXI from 'pixi.js';
 import SOUND from 'pixi-sound';
 
+PIXI.settings.SPRITE_MAX_TEXTURES = Math.min(PIXI.settings.SPRITE_MAX_TEXTURES , 16);
+
 PIXI["sound"] = SOUND; // ts wont complain
 
 import axios from 'axios';
@@ -438,8 +440,7 @@ export default {
       }
     }
 
-    $(window).unload(
-      function() {
+    window.addEventListener('beforeunload', function(event) {
         vm.source.close();
       }
     );
