@@ -56,6 +56,7 @@ def load_user(id):
 
 CORS(app, resources={r'/*': {"origins": "*"}})
 
+#TODO broadcast channel upgrade on register too?
 @app.route("/register")
 def route_register():
 	username = request.args.get("username")
@@ -97,7 +98,7 @@ def ping_pong():
 
 @app.route("/players")
 def route_players():
-	return jsonify({"players": [{"name":user.username, "titles":""} for user in User.query.all()]})
+	return jsonify({"players": [{"name":user.username, "titles":"", "online": user.online} for user in User.query.all()]})
 @jwt_required
 
 @app.route("/name", methods=["GET"])
@@ -270,7 +271,7 @@ def getMovestr(g, movestr):
 		movestr = selected + " " + movedir
 	return movestr
 
-from time import time
+from time import time, sleep
 
 @app.route("/game", methods=["GET"])
 @jwt_required
@@ -453,39 +454,60 @@ def route_listen():
 streamcounter = 0
 
 def event_stream(user):
-	print("Starting stream", user)
-	global streamcounter
-	streamcounter += 1
-	esid = streamcounter
-	pubsub = red.pubsub()
-	#this can't be global, this has to be user specific, otherwise all users will be subscribed!
-	#XXX watch out, user could get name 'game'! prefix somehow
-	pubsub.subscribe("u|"+user.username)
-	pubsub.subscribe('chat')#TODO reenable
-	for message in pubsub.listen():
-		print("MSG", esid, user, message["channel"], message["data"], pubsub.channels)
-		#print(message["channel"], user.username, message["channel"]==user.username)
-		if message["channel"].decode("utf-8").startswith("u|"):# == user.username:
-			if isinstance(message["data"], bytes):
-				newchannel = message["data"]
-				prefix = newchannel.decode("utf-8")[:2]
-				if newchannel not in pubsub.channels:
-					for channel in pubsub.channels:
-						if channel.decode("utf-8").startswith(prefix):
-							print("UNSUB", channel)
-							pubsub.unsubscribe(channel)
-					print("SUB", newchannel)
-					pubsub.subscribe(newchannel)
-		else:
-			#print(type(message["data"]))
-			#print("STREAM", message)
-			# how to prevent double update for mover?
-			# let client send unique update id with /game call, send it back, then let client check
-			# alternatively, use username-channel, and one public/spectator one
-			if isinstance(message["data"], bytes):
-				yield 'data: %s\n\n' % json.dumps({"channel": message["channel"].decode("utf-8"), "data":message['data'].decode('utf-8')})
+	user.online = 1
+	db.session.commit()
+	try:
+		print("Starting stream", user)
+		global streamcounter
+		streamcounter += 1
+		esid = streamcounter
+		pubsub = red.pubsub()
+		#this can't be global, this has to be user specific, otherwise all users will be subscribed!
+		#XXX watch out, user could get name 'game'! prefix somehow
+		pubsub.subscribe("u|"+user.username)
+		pubsub.subscribe('chat')#TODO reenable
+		#for message in pubsub.listen():
+		while True:
+			message = pubsub.get_message()
+			if not message:
+				#print("No message")
+				yield "data: {}\n\n"
+				sleep(0.1)
+				continue
+			print("MSG", esid, user, message["channel"], message["data"], pubsub.channels)
+			#print(message["channel"], user.username, message["channel"]==user.username)
+			if message["channel"].decode("utf-8").startswith("u|"):# == user.username:
+				if isinstance(message["data"], bytes):
+					newchannel = message["data"]
+					prefix = newchannel.decode("utf-8")[:2]
+					if newchannel not in pubsub.channels:
+						for channel in pubsub.channels:
+							if channel.decode("utf-8").startswith(prefix):
+								print("UNSUB", channel)
+								pubsub.unsubscribe(channel)
+						print("SUB", newchannel)
+						pubsub.subscribe(newchannel)
+						username = newchannel.decode("utf8")[2:]
+						user = User.query.filter_by(username=username).first()
+						user.online = 1
+						db.session.commit()
 			else:
-				yield 'data: %s\n\n' % message["data"]
+				#print(type(message["data"]))
+				#print("STREAM", message)
+				# how to prevent double update for mover?
+				# let client send unique update id with /game call, send it back, then let client check
+				# alternatively, use username-channel, and one public/spectator one
+				if isinstance(message["data"], bytes):
+					yield 'data: %s\n\n' % json.dumps({"channel": message["channel"].decode("utf-8"), "data":message['data'].decode('utf-8')})
+				else:
+					yield 'data: %s\n\n' % message["data"]
+	finally:
+		user.online = 0
+		db.session.commit()
+		print("CLOSED", user.username)
+		# TODO handle logout
+
+# alternatively, save last request timestamp of user, assume offline? - doesn't really work if on same page -> but could add this mechanism inside event_stream too
 
 def getRequestOrTempUser():
 	user = getRequestUser()

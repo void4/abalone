@@ -412,6 +412,10 @@ export default {
       // console.log("OPEN", evt)
     }
 
+    function isEmpty(obj) {
+      return Object.keys(obj).length === 0 && obj.constructor === Object
+    }
+
     let vm = this;
     this.source.onmessage = function (event) {
       console.log("EVT", event.data);
@@ -419,7 +423,9 @@ export default {
       if (j["channel"]=="chat") {
         vm.$root.$emit('chatappend', j["data"]);
       } else {
-        vm.getGame();
+        if (!isEmpty(j)) {
+          vm.getGame();
+        }
       }
     };
 
@@ -431,6 +437,12 @@ export default {
           console.log("Event Source Closed");
       }
     }
+
+    $(window).unload(
+      function() {
+        vm.source.close();
+      }
+    );
   },
   destroyed() {
     //console.log("Destroyed")

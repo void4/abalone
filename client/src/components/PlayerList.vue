@@ -3,6 +3,7 @@
     <h3>{{ $t('playerlist') }}</h3>
     <b-list-group>
       <b-list-group-item v-for="player in players">
+        <i v-bind:class="{ online: player.online }">●</i>
         <b title="Abalone Master" class="titles">{{player.titles}}</b>
         {{ player.name }}
       </b-list-group-item>
@@ -17,6 +18,11 @@
 
 .titles {
     color: #d59020;
+}
+
+.online {
+    color: #629924;
+    opacity: .9;
 }
 </style>
 
@@ -39,6 +45,7 @@ export default {
       axios.get(path)
         .then((res) => {
           this.players = res.data.players;
+          console.log(this.players)
         })
         .catch((error) => {
           // eslint-disable-next-line
