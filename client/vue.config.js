@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 module.exports = {
+    publicPath: '',
     devServer: {
         disableHostCheck: true,
         https: true,
