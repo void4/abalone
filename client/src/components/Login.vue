@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     register() {
-      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/register`;
+      const path = `${window.location.protocol}//${window.location.hostname}/abasocket/register`;
       axios.get(path, { params: { username: this.username, password: this.password } })
         .then((res) => {
           this.info = res.data.info;
@@ -68,7 +68,7 @@ export default {
         });
     },
     login() {
-      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/login`;
+      const path = `${window.location.protocol}//${window.location.hostname}/abasocket/login`;
       axios.get(path, { params: { username: this.username, password: this.password } })
         .then((res) => {
           this.info = res.data.info;

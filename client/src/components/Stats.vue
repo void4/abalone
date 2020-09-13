@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     getRatings() {
-      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/ratings`;
+      const path = `${window.location.protocol}//${window.location.hostname}/abasocket/ratings`;
       axios.get(path)
         .then((res) => {
           //console.log(res)

@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     startGame(gamemode) {
-      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/newgame`;
+      const path = `${window.location.protocol}//${window.location.hostname}/abasocket/newgame`;
       axios.get(path, { params: { gamemode, ranked: this.ranked, invite: this.invitelink, timetomove: this.timetomove, layout: this.layout } })
         .then((res) => {
           //this.invitelink = res.data.invitelink;

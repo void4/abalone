@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     getQuote() {
-      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/quote`;
+      const path = `${window.location.protocol}//${window.location.hostname}/abasocket/quote`;
       axios.get(path)
         .then((res) => {
           this.quote = res.data.quote;

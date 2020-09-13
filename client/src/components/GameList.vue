@@ -47,7 +47,7 @@ export default {
   methods: {
     loadgames() {
       console.log("LOADGAMES")
-      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/gamelist`;
+      const path = `${window.location.protocol}//${window.location.hostname}/abasocket/gamelist`;
       axios.get(path)
         .then((res) => {
           //console.log(res.data);
@@ -65,7 +65,7 @@ export default {
         });
     },
     inviteresponse(gid, accepted) {
-    const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/inviteresponse`;
+    const path = `${window.location.protocol}//${window.location.hostname}/abasocket/inviteresponse`;
     axios.get(path, {params: {gid, accepted}})
       .then((res) => {
         this.loadgames();
