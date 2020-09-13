@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     getMessage() {
-      const path = `${window.location.protocol}//${window.location.hostname}:5000/ping`;
+      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/ping`;
       axios.get(path)
         .then((res) => {
           this.msg = res.data;

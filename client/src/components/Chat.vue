@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     chatsubmit() {
-      const path =`${window.location.protocol}//${window.location.hostname}:5000/chat`;
+      const path =`${window.location.protocol}//${window.location.hostname}:10000/abasocket/chat`;
       axios.get(path, { params: { chatinput: this.chatinput } })
         .then((res) => {
           //this.chat += res.data.chat;

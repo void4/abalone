@@ -200,7 +200,7 @@ export default {
       }
     },
     getGame() {
-      const path = `${window.location.protocol}//${window.location.hostname}:5000/game`;
+      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/game`;
       axios.get(path, { params: { id: this.gameid } })
         .then((res) => {
           this.game = res.data.board;
@@ -221,7 +221,7 @@ export default {
     move() {
       const movetext = document.getElementById('moveinput').value;
 
-      const path = `${window.location.protocol}//${window.location.hostname}:5000/game`;
+      const path = `${window.location.protocol}//${window.location.hostname}:10000/abasocket/game`;
       axios.get(path, { params: { id: this.gameid, move: movetext } })
         .then((res) => {
           this.game = res.data.board;
@@ -407,7 +407,7 @@ export default {
     cookie.set('tmpid', tmpid);
 
     const token = cookie.get('access_token');
-    this.source = new EventSource(`${window.location.protocol}//${window.location.hostname}:5000/stream?token=${token}&tmpid=${tmpid}`);
+    this.source = new EventSource(`${window.location.protocol}//${window.location.hostname}:10000/abasocket/stream?token=${token}&tmpid=${tmpid}`);
     // console.log(this.source)
 
     this.source.onopen = function(evt) {
