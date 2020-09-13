@@ -528,7 +528,10 @@ def stream():
 
 import os
 if __name__ == "__main__":
+	"""
 	if os.getcwd().startswith("/root"):
 		app.run("0.0.0.0", threaded=True, ssl_context=("/etc/letsencrypt/live/qewasd.com/cert.pem", "/etc/letsencrypt/live/qewasd.com/privkey.pem"))
 	else:
 		app.run("0.0.0.0", threaded=True)
+	"""
+	app.run("0.0.0.0", port=10000, threaded=True)
